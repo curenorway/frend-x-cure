@@ -17,6 +17,7 @@ import { transformVideos } from './transformers/videos.js';
 import { transformProjects } from './transformers/projects.js';
 import { transformArticles } from './transformers/articles.js';
 import { transformNews } from './transformers/news.js';
+import { createWebflowClient, mapToWebflowFields } from './integrations/webflow.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -509,6 +510,166 @@ app.post('/api/transform/:type', async (req, res) => {
     broadcast({
       type: 'transform-error',
       contentType: type,
+      error: error.message
+    });
+
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// API: Upload to Webflow - Get collections
+app.get('/api/webflow/collections', async (req, res) => {
+  try {
+    const webflow = createWebflowClient();
+    const collections = await webflow.getCollections();
+
+    operationLog.push({
+      timestamp: new Date().toISOString(),
+      type: 'webflow-list-collections',
+      success: true
+    });
+
+    res.json(collections);
+  } catch (error) {
+    operationLog.push({
+      timestamp: new Date().toISOString(),
+      type: 'webflow-list-collections',
+      error: error.message
+    });
+
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// API: Upload transformed data to Webflow
+app.post('/api/webflow/upload', async (req, res) => {
+  const { contentType, collectionId, dryRun = true } = req.body;
+
+  try {
+    // Load transformed data
+    const filePath = `./output/transformed/${contentType}.json`;
+    const transformedData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+
+    if (!transformedData.items || transformedData.items.length === 0) {
+      return res.status(400).json({ error: 'No items to upload' });
+    }
+
+    // Map to Webflow fields
+    const webflowItems = transformedData.items.map(item =>
+      mapToWebflowFields(item, contentType)
+    );
+
+    if (dryRun) {
+      // Validate only, don't upload
+      const webflow = createWebflowClient();
+      const validation = webflow.validateItems(webflowItems, ['name', 'slug']);
+
+      broadcast({
+        type: 'webflow-dry-run-complete',
+        contentType,
+        validation
+      });
+
+      operationLog.push({
+        timestamp: new Date().toISOString(),
+        type: 'webflow-dry-run',
+        contentType,
+        itemCount: webflowItems.length,
+        valid: validation.valid,
+        invalid: validation.invalid
+      });
+
+      return res.json({
+        dryRun: true,
+        validation,
+        message: 'Dry run complete - no data uploaded'
+      });
+    }
+
+    // Actual upload
+    const webflow = createWebflowClient();
+
+    broadcast({
+      type: 'webflow-upload-start',
+      contentType,
+      total: webflowItems.length
+    });
+
+    const results = await webflow.batchUploadWithRetry(
+      collectionId,
+      webflowItems,
+      {
+        progressCallback: (progress) => {
+          broadcast({
+            type: 'webflow-upload-progress',
+            ...progress
+          });
+        },
+        isLive: false // Upload as drafts
+      }
+    );
+
+    broadcast({
+      type: 'webflow-upload-complete',
+      contentType,
+      results
+    });
+
+    operationLog.push({
+      timestamp: new Date().toISOString(),
+      type: 'webflow-upload',
+      contentType,
+      collectionId,
+      total: results.total,
+      successful: results.successful,
+      failed: results.failed
+    });
+
+    res.json(results);
+  } catch (error) {
+    broadcast({
+      type: 'webflow-upload-error',
+      contentType,
+      error: error.message
+    });
+
+    operationLog.push({
+      timestamp: new Date().toISOString(),
+      type: 'webflow-upload',
+      contentType,
+      error: error.message
+    });
+
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// API: Publish items in Webflow
+app.post('/api/webflow/publish', async (req, res) => {
+  const { collectionId, itemIds } = req.body;
+
+  if (!Array.isArray(itemIds) || itemIds.length === 0) {
+    return res.status(400).json({ error: 'Invalid item IDs' });
+  }
+
+  try {
+    const webflow = createWebflowClient();
+    const results = await webflow.publishItems(collectionId, itemIds);
+
+    operationLog.push({
+      timestamp: new Date().toISOString(),
+      type: 'webflow-publish',
+      collectionId,
+      itemCount: itemIds.length,
+      success: true
+    });
+
+    res.json(results);
+  } catch (error) {
+    operationLog.push({
+      timestamp: new Date().toISOString(),
+      type: 'webflow-publish',
+      collectionId,
       error: error.message
     });
 
