@@ -200,7 +200,7 @@
       <h1 class="login-title">Migration Tool Access</h1>
     </div>
 
-    <form class="login-form" id="loginForm" onsubmit="event.preventDefault(); event.stopPropagation(); console.log('Inline prevention!'); return false;">
+    <form class="login-form" id="loginForm">
       <div class="error-message" id="errorMessage">
         Invalid credentials. Please try again.
       </div>
@@ -231,7 +231,7 @@
         >
       </div>
 
-      <button type="submit" class="btn-login" id="loginBtn">
+      <button type="button" class="btn-login" id="loginBtn" onclick="handleLogin(event)">
         <span class="spinner"></span>
         <span class="btn-text">Sign In</span>
       </button>
@@ -243,6 +243,63 @@
   </div>
 
   <script>
+    // Global handler for button click
+    function handleLogin(event) {
+      console.log('[BUTTON] Login button clicked');
+
+      // Prevent any default behavior
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+
+      // Get form values
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const errorMsg = document.getElementById('errorMessage');
+      const loginBtn = document.getElementById('loginBtn');
+
+      console.log('[BUTTON] Username:', username);
+
+      // Show loading state
+      loginBtn.classList.add('loading');
+      loginBtn.disabled = true;
+      loginBtn.querySelector('.btn-text').textContent = 'Signing in...';
+      errorMsg.classList.remove('show');
+
+      // Make the request
+      fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username, password })
+      })
+      .then(response => {
+        console.log('[BUTTON] Response:', response.status);
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Invalid credentials');
+        }
+      })
+      .then(data => {
+        console.log('[BUTTON] Login successful, redirecting...');
+        // Simple redirect
+        window.location.href = '/';
+      })
+      .catch(error => {
+        console.error('[BUTTON] Login error:', error);
+        errorMsg.textContent = error.message || 'Login failed';
+        errorMsg.classList.add('show');
+        loginBtn.classList.remove('loading');
+        loginBtn.disabled = false;
+        loginBtn.querySelector('.btn-text').textContent = 'Sign In';
+      });
+
+      return false;
+    }
+
     // Immediate test to verify script runs
     (function() {
       console.log('[INIT] Login script loaded - immediate');
@@ -321,19 +378,17 @@
 
             if (response.ok) {
               console.log('[CLIENT] Login successful, parsing response...');
+              localStorage.setItem('loginSuccess', 'true');
               return response.json().then(data => {
                 console.log('[CLIENT] Response data:', data);
+                localStorage.setItem('responseData', JSON.stringify(data));
                 if (data.success) {
                   console.log('[CLIENT] Success confirmed, redirecting NOW...');
-                  // Force redirect with replace to avoid back button issues
-                  window.location.replace('/');
-                  // Backup redirect methods
-                  window.location.href = '/';
-                  window.location = '/';
-                  // If still here after 100ms, try harder
-                  setTimeout(() => {
-                    window.location.reload();
-                  }, 100);
+                  localStorage.setItem('redirectAttempted', new Date().toISOString());
+                  // Try absolute URL redirect
+                  const currentHost = window.location.protocol + '//' + window.location.host;
+                  console.log('[CLIENT] Redirecting to:', currentHost + '/');
+                  window.location.href = currentHost + '/';
                 } else {
                   throw new Error('Login response was not successful');
                 }
