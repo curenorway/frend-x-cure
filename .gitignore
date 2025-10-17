@@ -1,5 +1,8 @@
 node_modules/
 .env
-reports/
 *.log
 .DS_Store
+
+# Keep reports and output in git for deployment
+# reports/
+# output/

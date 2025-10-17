@@ -1,0 +1,3111 @@
+{
+  "generatedAt": "2025-10-17T10:49:23.788Z",
+  "space": {
+    "id": "139140",
+    "name": "Frend",
+    "domain": "https://www.frend.no/api/preview?secret=134251135A&slug="
+  },
+  "components": {
+    "total": 101,
+    "analysis": {
+      "total": 101,
+      "byType": {
+        "nestable": 85,
+        "root": 16
+      },
+      "complexFields": [
+        {
+          "component": "accordionItem",
+          "field": "text",
+          "type": "richtext"
+        },
+        {
+          "component": "Arrangmement",
+          "field": "metaFields",
+          "type": "custom"
+        },
+        {
+          "component": "Article",
+          "field": "metaFields",
+          "type": "custom"
+        },
+        {
+          "component": "banner",
+          "field": "body",
+          "type": "richtext"
+        },
+        {
+          "component": "bigList",
+          "field": "points",
+          "type": "richtext"
+        },
+        {
+          "component": "bodyParagraph",
+          "field": "text",
+          "type": "richtext"
+        },
+        {
+          "component": "contactGridItem",
+          "field": "body",
+          "type": "richtext"
+        },
+        {
+          "component": "EBook",
+          "field": "metaFields",
+          "type": "custom"
+        },
+        {
+          "component": "howWeWorkList",
+          "field": "leftList",
+          "type": "richtext"
+        },
+        {
+          "component": "howWeWorkList",
+          "field": "rightList",
+          "type": "richtext"
+        },
+        {
+          "component": "howWeWorkVisual",
+          "field": "imageText",
+          "type": "richtext"
+        },
+        {
+          "component": "HubspotPage",
+          "field": "metaFields",
+          "type": "custom"
+        },
+        {
+          "component": "Jobs",
+          "field": "metaFields",
+          "type": "custom"
+        },
+        {
+          "component": "Kunnskap",
+          "field": "metaFields",
+          "type": "custom"
+        },
+        {
+          "component": "Landing",
+          "field": "metaFields",
+          "type": "custom"
+        },
+        {
+          "component": "News",
+          "field": "metaFields",
+          "type": "custom"
+        },
+        {
+          "component": "project",
+          "field": "tools",
+          "type": "richtext"
+        },
+        {
+          "component": "project",
+          "field": "results",
+          "type": "richtext"
+        },
+        {
+          "component": "project",
+          "field": "metaFields",
+          "type": "custom"
+        },
+        {
+          "component": "projectHighlights",
+          "field": "projects",
+          "type": "table"
+        },
+        {
+          "component": "results",
+          "field": "list",
+          "type": "richtext"
+        },
+        {
+          "component": "Service",
+          "field": "metaFields",
+          "type": "custom"
+        },
+        {
+          "component": "ServicePreview",
+          "field": "richtext",
+          "type": "richtext"
+        },
+        {
+          "component": "serviceWithImage",
+          "field": "list",
+          "type": "richtext"
+        },
+        {
+          "component": "summary",
+          "field": "text",
+          "type": "richtext"
+        },
+        {
+          "component": "Video",
+          "field": "metaFields",
+          "type": "custom"
+        },
+        {
+          "component": "Webinar",
+          "field": "metaFields",
+          "type": "custom"
+        }
+      ],
+      "nestedComponents": []
+    },
+    "list": [
+      {
+        "name": "accordion",
+        "displayName": null,
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 2,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "items",
+            "type": "bloks",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "accordionItem",
+        "displayName": null,
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 2,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "text",
+            "type": "richtext",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "allEvents",
+        "displayName": "Alle arrangementer",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 1,
+        "fields": [
+          {
+            "name": "events",
+            "type": "options",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "allPeople",
+        "displayName": "Menneskene i Frend",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 2,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "people",
+            "type": "options",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "allProjects",
+        "displayName": "Alle prosjekter",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 1,
+        "fields": [
+          {
+            "name": "projects",
+            "type": "options",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "Arrangmement",
+        "displayName": "Arrangmement",
+        "isRoot": true,
+        "isNestable": false,
+        "fieldCount": 10,
+        "fields": [
+          {
+            "name": "title",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "date",
+            "type": "datetime",
+            "required": false
+          },
+          {
+            "name": "location",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "subtext",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "image",
+            "type": "asset",
+            "required": false
+          },
+          {
+            "name": "hero",
+            "type": "bloks",
+            "required": false
+          },
+          {
+            "name": "theme",
+            "type": "option",
+            "required": false
+          },
+          {
+            "name": "body",
+            "type": "bloks",
+            "required": false
+          },
+          {
+            "name": "tab-fab033bb-3a51-4dbc-96e2-4f38ccfe81be",
+            "type": "tab",
+            "required": false
+          },
+          {
+            "name": "metaFields",
+            "type": "custom",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "Article",
+        "displayName": null,
+        "isRoot": true,
+        "isNestable": false,
+        "fieldCount": 9,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "subtext",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "author",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "highlightTags",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "imageAsBackground",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "image",
+            "type": "asset",
+            "required": false
+          },
+          {
+            "name": "body",
+            "type": "bloks",
+            "required": false
+          },
+          {
+            "name": "tab-c7b8ddd3-1cf1-45a3-97cc-109717e9e18d",
+            "type": "tab",
+            "required": false
+          },
+          {
+            "name": "metaFields",
+            "type": "custom",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "banner",
+        "displayName": "Banner",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 8,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "list",
+            "type": "bloks",
+            "required": false
+          },
+          {
+            "name": "body",
+            "type": "richtext",
+            "required": false
+          },
+          {
+            "name": "link",
+            "type": "multilink",
+            "required": false
+          },
+          {
+            "name": "linktext",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "media",
+            "type": "asset",
+            "required": false
+          },
+          {
+            "name": "sticker",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "color",
+            "type": "option",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "bigHighlight",
+        "displayName": "Høydepunkt Prosjekt - Stor",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 1,
+        "fields": [
+          {
+            "name": "project",
+            "type": "option",
+            "required": true
+          }
+        ]
+      },
+      {
+        "name": "bigImage",
+        "displayName": "Full bredde bilde",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 1,
+        "fields": [
+          {
+            "name": "image",
+            "type": "asset",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "bigLink",
+        "displayName": "CTA i tekst",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 5,
+        "fields": [
+          {
+            "name": "label",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "link",
+            "type": "multilink",
+            "required": false
+          },
+          {
+            "name": "size",
+            "type": "option",
+            "required": false
+          },
+          {
+            "name": "openNew",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "addMargin",
+            "type": "boolean",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "bigList",
+        "displayName": null,
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 2,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "points",
+            "type": "richtext",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "bigPerson",
+        "displayName": "Kontaktperson",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 4,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "person",
+            "type": "option",
+            "required": true
+          },
+          {
+            "name": "linkText",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "link",
+            "type": "multilink",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "bodyBigText",
+        "displayName": "Ingress",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 1,
+        "fields": [
+          {
+            "name": "text",
+            "type": "textarea",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "bodyImage",
+        "displayName": "Bilde",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 1,
+        "fields": [
+          {
+            "name": "image",
+            "type": "asset",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "bodyParagraph",
+        "displayName": "Avsnitt",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 2,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "text",
+            "type": "richtext",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "bodyText",
+        "displayName": "(Ikke bruk)",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 1,
+        "fields": [
+          {
+            "name": "text",
+            "type": "textarea",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "bodyTitle",
+        "displayName": "Tittel",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 3,
+        "fields": [
+          {
+            "name": "inArticle",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "addMargin",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "text",
+            "type": "textarea",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "bodyVideo",
+        "displayName": "Video",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 6,
+        "fields": [
+          {
+            "name": "vimeoId",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "twentyThreeEmbed",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "size",
+            "type": "option",
+            "required": false
+          },
+          {
+            "name": "autoplay",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "height",
+            "type": "number",
+            "required": false
+          },
+          {
+            "name": "width",
+            "type": "number",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "callToAction",
+        "displayName": "CTA i Boks",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 6,
+        "fields": [
+          {
+            "name": "title",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "ingress",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "body",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "text",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "link",
+            "type": "multilink",
+            "required": false
+          },
+          {
+            "name": "color",
+            "type": "option",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "contactGrid",
+        "displayName": "Kontakt Kolonner",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 1,
+        "fields": [
+          {
+            "name": "columns",
+            "type": "bloks",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "contactGridItem",
+        "displayName": "Kontakt Boks",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 2,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "body",
+            "type": "richtext",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "crumb",
+        "displayName": null,
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 2,
+        "fields": [
+          {
+            "name": "label",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "link",
+            "type": "multilink",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "cta_grid",
+        "displayName": null,
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 1,
+        "fields": [
+          {
+            "name": "bloks",
+            "type": "bloks",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "doubleList",
+        "displayName": "Lenkeliste (flere CTAs)",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 1,
+        "fields": [
+          {
+            "name": "columns",
+            "type": "bloks",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "EBook",
+        "displayName": null,
+        "isRoot": true,
+        "isNestable": false,
+        "fieldCount": 8,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "subtext",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "highlightTags",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "image",
+            "type": "asset",
+            "required": false
+          },
+          {
+            "name": "body",
+            "type": "bloks",
+            "required": false
+          },
+          {
+            "name": "ebookLink",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "tab-fcb80779-4b7c-4fb4-a9bd-82dd4a104602",
+            "type": "tab",
+            "required": false
+          },
+          {
+            "name": "metaFields",
+            "type": "custom",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "excerpt",
+        "displayName": "Tekstbokser",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 3,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "body",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "link",
+            "type": "multilink",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "excerptSmallTitle",
+        "displayName": null,
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 0,
+        "fields": []
+      },
+      {
+        "name": "featuredPeople",
+        "displayName": "Involverte personer",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 2,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "people",
+            "type": "options",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "FormHero",
+        "displayName": null,
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 6,
+        "fields": [
+          {
+            "name": "tab-365494fb-42c9-4ca0-bfb8-38c7d5b8cabf",
+            "type": "tab",
+            "required": false
+          },
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "info",
+            "type": "bloks",
+            "required": false
+          },
+          {
+            "name": "image",
+            "type": "asset",
+            "required": false
+          },
+          {
+            "name": "formId",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "tab-ff4d3923-4d6d-4606-9dc7-ee8c8e21bd67",
+            "type": "tab",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "formstackForm",
+        "displayName": "",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 5,
+        "fields": [
+          {
+            "name": "title",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "subtext",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "color",
+            "type": "option",
+            "required": false
+          },
+          {
+            "name": "hubspotId",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "topLink",
+            "type": "text",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "grid",
+        "displayName": "To kolonner",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 2,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "columns",
+            "type": "bloks",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "hero",
+        "displayName": "Hero",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 6,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "vimeoSource",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "videoPosition",
+            "type": "option",
+            "required": false
+          },
+          {
+            "name": "image",
+            "type": "asset",
+            "required": false
+          },
+          {
+            "name": "breadCrumbs",
+            "type": "bloks",
+            "required": false
+          },
+          {
+            "name": "contactInfo",
+            "type": "textarea",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "hero25Image",
+        "displayName": null,
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 5,
+        "fields": [
+          {
+            "name": "title",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "subtext",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "image",
+            "type": "asset",
+            "required": false
+          },
+          {
+            "name": "breadCrumbs",
+            "type": "bloks",
+            "required": false
+          },
+          {
+            "name": "contactInfo",
+            "type": "textarea",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "heroEvent",
+        "displayName": null,
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 5,
+        "fields": [
+          {
+            "name": "location",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "places",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "time",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "price",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "form",
+            "type": "bloks",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "heroFrontpage",
+        "displayName": null,
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 5,
+        "fields": [
+          {
+            "name": "vimeoSource",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "videoPosition",
+            "type": "option",
+            "required": false
+          },
+          {
+            "name": "image",
+            "type": "asset",
+            "required": false
+          },
+          {
+            "name": "breadCrumbs",
+            "type": "bloks",
+            "required": false
+          },
+          {
+            "name": "contactInfo",
+            "type": "textarea",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "heroHowWeWork",
+        "displayName": "",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 6,
+        "fields": [
+          {
+            "name": "title",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "subtext",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "image",
+            "type": "asset",
+            "required": false
+          },
+          {
+            "name": "mobileImage",
+            "type": "asset",
+            "required": false
+          },
+          {
+            "name": "breadCrumbs",
+            "type": "bloks",
+            "required": false
+          },
+          {
+            "name": "contactInfo",
+            "type": "textarea",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "heroSmallImage",
+        "displayName": null,
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 5,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "subtext",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "image",
+            "type": "asset",
+            "required": false
+          },
+          {
+            "name": "breadCrumbs",
+            "type": "bloks",
+            "required": false
+          },
+          {
+            "name": "contactInfo",
+            "type": "textarea",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "heroWithHighlight",
+        "displayName": "",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 5,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "subtext",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "highlights",
+            "type": "options",
+            "required": true
+          },
+          {
+            "name": "breadCrumbs",
+            "type": "bloks",
+            "required": false
+          },
+          {
+            "name": "contactInfo",
+            "type": "textarea",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "heroWithImage",
+        "displayName": null,
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 5,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "subtext",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "image",
+            "type": "asset",
+            "required": false
+          },
+          {
+            "name": "breadCrumbs",
+            "type": "bloks",
+            "required": false
+          },
+          {
+            "name": "contactInfo",
+            "type": "textarea",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "howWeWorkImages",
+        "displayName": null,
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 4,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "subtext",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "images",
+            "type": "multiasset",
+            "required": false
+          },
+          {
+            "name": "anchor",
+            "type": "text",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "howWeWorkList",
+        "displayName": null,
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 3,
+        "fields": [
+          {
+            "name": "title",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "leftList",
+            "type": "richtext",
+            "required": false
+          },
+          {
+            "name": "rightList",
+            "type": "richtext",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "howWeWorkSlide",
+        "displayName": null,
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 3,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "desktopImage",
+            "type": "asset",
+            "required": false
+          },
+          {
+            "name": "mobileImages",
+            "type": "multiasset",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "howWeWorkSlides",
+        "displayName": "",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 3,
+        "fields": [
+          {
+            "name": "smallTitle",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "slides",
+            "type": "bloks",
+            "required": false
+          },
+          {
+            "name": "anchor",
+            "type": "text",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "howWeWorkVisual",
+        "displayName": null,
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 6,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "subtext",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "image",
+            "type": "asset",
+            "required": false
+          },
+          {
+            "name": "imageText",
+            "type": "richtext",
+            "required": false
+          },
+          {
+            "name": "altColor",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "anchor",
+            "type": "text",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "hubspotForm",
+        "displayName": "",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 6,
+        "fields": [
+          {
+            "name": "title",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "topLink",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "theme",
+            "type": "option",
+            "required": false
+          },
+          {
+            "name": "subtext",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "hubspotId",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "media",
+            "type": "asset",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "HubspotPage",
+        "displayName": null,
+        "isRoot": true,
+        "isNestable": false,
+        "fieldCount": 10,
+        "fields": [
+          {
+            "name": "doNotIndex",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "title",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "subtext",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "image",
+            "type": "asset",
+            "required": false
+          },
+          {
+            "name": "theme",
+            "type": "option",
+            "required": false
+          },
+          {
+            "name": "body",
+            "type": "bloks",
+            "required": false
+          },
+          {
+            "name": "location",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "date",
+            "type": "datetime",
+            "required": false
+          },
+          {
+            "name": "tab-fab033bb-3a51-4dbc-96e2-4f38ccfe81be",
+            "type": "tab",
+            "required": false
+          },
+          {
+            "name": "metaFields",
+            "type": "custom",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "Image",
+        "displayName": null,
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 1,
+        "fields": [
+          {
+            "name": "image",
+            "type": "asset",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "imageGallery",
+        "displayName": null,
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 2,
+        "fields": [
+          {
+            "name": "images",
+            "type": "multiasset",
+            "required": false
+          },
+          {
+            "name": "columns",
+            "type": "option",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "imageGrid",
+        "displayName": "Bilde grid",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 2,
+        "fields": [
+          {
+            "name": "images",
+            "type": "multiasset",
+            "required": false
+          },
+          {
+            "name": "inArticle",
+            "type": "boolean",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "imageQuote",
+        "displayName": null,
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 3,
+        "fields": [
+          {
+            "name": "quote",
+            "type": "bloks",
+            "required": true
+          },
+          {
+            "name": "image",
+            "type": "asset",
+            "required": false
+          },
+          {
+            "name": "imageCaption",
+            "type": "text",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "imageScroll",
+        "displayName": "Bilde karusell",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 2,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "images",
+            "type": "multiasset",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "jobHighlights",
+        "displayName": "Ledige stillinger (liste)",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 1,
+        "fields": [
+          {
+            "name": "jobs",
+            "type": "options",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "Jobs",
+        "displayName": null,
+        "isRoot": true,
+        "isNestable": false,
+        "fieldCount": 10,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "deadline",
+            "type": "datetime",
+            "required": false
+          },
+          {
+            "name": "tab-cb96b4bc-ba13-4a50-9b51-5c6e71a5c905",
+            "type": "tab",
+            "required": false
+          },
+          {
+            "name": "metaFields",
+            "type": "custom",
+            "required": false
+          },
+          {
+            "name": "tab-31495f1a-08ad-425c-90de-0431edb7f9b7",
+            "type": "tab",
+            "required": false
+          },
+          {
+            "name": "subtext",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "body",
+            "type": "bloks",
+            "required": false
+          },
+          {
+            "name": "excerpt",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "listingTitle",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "listingTags",
+            "type": "text",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "karriere_cta",
+        "displayName": null,
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 3,
+        "fields": [
+          {
+            "name": "title",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "text",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "link",
+            "type": "multilink",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "Kunnskap",
+        "displayName": null,
+        "isRoot": true,
+        "isNestable": false,
+        "fieldCount": 4,
+        "fields": [
+          {
+            "name": "hero",
+            "type": "bloks",
+            "required": true
+          },
+          {
+            "name": "tab-d412426d-d881-4c72-9600-0ae51987973b",
+            "type": "tab",
+            "required": false
+          },
+          {
+            "name": "metaFields",
+            "type": "custom",
+            "required": false
+          },
+          {
+            "name": "chosenContent",
+            "type": "options",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "Landing",
+        "displayName": null,
+        "isRoot": true,
+        "isNestable": false,
+        "fieldCount": 10,
+        "fields": [
+          {
+            "name": "darkMode",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "bigFrendLogo",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "darkModeColor",
+            "type": "option",
+            "required": false
+          },
+          {
+            "name": "date",
+            "type": "datetime",
+            "required": false
+          },
+          {
+            "name": "location",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "image",
+            "type": "asset",
+            "required": false
+          },
+          {
+            "name": "hero",
+            "type": "bloks",
+            "required": false
+          },
+          {
+            "name": "body",
+            "type": "bloks",
+            "required": false
+          },
+          {
+            "name": "metaFields",
+            "type": "custom",
+            "required": false
+          },
+          {
+            "name": "tab-8e92f69a-4d90-46ed-bba8-27a0ac5fcf45",
+            "type": "tab",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "linkedinEmbed",
+        "displayName": "LinkedIn Embed",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 2,
+        "fields": [
+          {
+            "name": "dataCounter",
+            "type": "option",
+            "required": false
+          },
+          {
+            "name": "alignment",
+            "type": "option",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "linkList",
+        "displayName": null,
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 3,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "links",
+            "type": "options",
+            "required": false
+          },
+          {
+            "name": "size",
+            "type": "option",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "LogoShowcase",
+        "displayName": "Logo showcase",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 3,
+        "fields": [
+          {
+            "name": "logos",
+            "type": "multiasset",
+            "required": false
+          },
+          {
+            "name": "mode",
+            "type": "option",
+            "required": false
+          },
+          {
+            "name": "blackAndWhite",
+            "type": "boolean",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "longCTA",
+        "displayName": null,
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 4,
+        "fields": [
+          {
+            "name": "title",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "text",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "label",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "link",
+            "type": "multilink",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "Navigation Anchor",
+        "displayName": null,
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 2,
+        "fields": [
+          {
+            "name": "label",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "destination",
+            "type": "text",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "newCta",
+        "displayName": null,
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 6,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "text",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "cta",
+            "type": "multilink",
+            "required": false
+          },
+          {
+            "name": "ctaEmbed",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "theme",
+            "type": "option",
+            "required": false
+          },
+          {
+            "name": "size",
+            "type": "option",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "News",
+        "displayName": null,
+        "isRoot": true,
+        "isNestable": false,
+        "fieldCount": 8,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": true
+          },
+          {
+            "name": "subtext",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "author",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "highlightTags",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "image",
+            "type": "asset",
+            "required": false
+          },
+          {
+            "name": "body",
+            "type": "bloks",
+            "required": false
+          },
+          {
+            "name": "tab-576c1c57-1e2b-4e7c-ba2c-89228e4a2f7a",
+            "type": "tab",
+            "required": false
+          },
+          {
+            "name": "metaFields",
+            "type": "custom",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "newsHighlightsScroll",
+        "displayName": "Nyheter karusell",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 2,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "news",
+            "type": "options",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "numberedList",
+        "displayName": "Nummerert liste",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 2,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "list",
+            "type": "bloks",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "numberedListItem",
+        "displayName": "Numbered List Item",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 2,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "text",
+            "type": "textarea",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "Page",
+        "displayName": null,
+        "isRoot": true,
+        "isNestable": false,
+        "fieldCount": 1,
+        "fields": [
+          {
+            "name": "body",
+            "type": "bloks",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "paragraphImage",
+        "displayName": "Avsnitt bilde",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 2,
+        "fields": [
+          {
+            "name": "image",
+            "type": "asset",
+            "required": false
+          },
+          {
+            "name": "size",
+            "type": "option",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "Person",
+        "displayName": null,
+        "isRoot": true,
+        "isNestable": false,
+        "fieldCount": 6,
+        "fields": [
+          {
+            "name": "name",
+            "type": "text",
+            "required": true
+          },
+          {
+            "name": "image",
+            "type": "asset",
+            "required": true
+          },
+          {
+            "name": "altImage",
+            "type": "asset",
+            "required": false
+          },
+          {
+            "name": "role",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "email",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "phone",
+            "type": "text",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "project",
+        "displayName": null,
+        "isRoot": true,
+        "isNestable": false,
+        "fieldCount": 16,
+        "fields": [
+          {
+            "name": "smallTitle",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "mobileTitle",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "image",
+            "type": "asset",
+            "required": false
+          },
+          {
+            "name": "highlightTags",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "subtext",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "webpageLabel",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "webpage",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "contact",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "customer",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "tools",
+            "type": "richtext",
+            "required": false
+          },
+          {
+            "name": "results",
+            "type": "richtext",
+            "required": false
+          },
+          {
+            "name": "pageImage",
+            "type": "asset",
+            "required": false
+          },
+          {
+            "name": "body",
+            "type": "bloks",
+            "required": false
+          },
+          {
+            "name": "tab-8fd73090-6fb6-4e9c-a8fb-116afd3a86a5",
+            "type": "tab",
+            "required": false
+          },
+          {
+            "name": "metaFields",
+            "type": "custom",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "projectHighlights",
+        "displayName": "Fremhevde prosjekter (liste)",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 2,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "projects",
+            "type": "table",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "projectHighlightsScroll",
+        "displayName": "Prosjekter karusell",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 1,
+        "fields": [
+          {
+            "name": "projects",
+            "type": "options",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "quote",
+        "displayName": "Sitat",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 2,
+        "fields": [
+          {
+            "name": "text",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "source",
+            "type": "text",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "relatedContentScroll",
+        "displayName": "Relevant innhold",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 3,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "tag",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "content",
+            "type": "options",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "relatedServices",
+        "displayName": "Relaterte tjenester",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 2,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "links",
+            "type": "options",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "results",
+        "displayName": "Resultater (liste)",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 2,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "list",
+            "type": "richtext",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "root",
+        "displayName": null,
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 1,
+        "fields": [
+          {
+            "name": "bloks",
+            "type": "bloks",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "Service",
+        "displayName": null,
+        "isRoot": true,
+        "isNestable": false,
+        "fieldCount": 5,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "subtext",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "body",
+            "type": "bloks",
+            "required": false
+          },
+          {
+            "name": "tab-89b72d85-4faa-4190-b75e-51ef8171163d",
+            "type": "tab",
+            "required": false
+          },
+          {
+            "name": "metaFields",
+            "type": "custom",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "serviceNavigation",
+        "displayName": null,
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 2,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "navigation",
+            "type": "bloks",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "ServicePreview",
+        "displayName": null,
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 8,
+        "fields": [
+          {
+            "name": "Title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "richtext",
+            "type": "richtext",
+            "required": false
+          },
+          {
+            "name": "Links",
+            "type": "bloks",
+            "required": false
+          },
+          {
+            "name": "Link",
+            "type": "multilink",
+            "required": false
+          },
+          {
+            "name": "icon",
+            "type": "asset",
+            "required": false
+          },
+          {
+            "name": "Text",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "logos",
+            "type": "multiasset",
+            "required": false
+          },
+          {
+            "name": "spanEntireWidth",
+            "type": "boolean",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "Services",
+        "displayName": null,
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 1,
+        "fields": [
+          {
+            "name": "Services",
+            "type": "bloks",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "servicesList",
+        "displayName": null,
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 2,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "service",
+            "type": "bloks",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "serviceText",
+        "displayName": null,
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 2,
+        "fields": [
+          {
+            "name": "text",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "desc",
+            "type": "text",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "serviceWithImage",
+        "displayName": "Service with image",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 8,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "image",
+            "type": "asset",
+            "required": false
+          },
+          {
+            "name": "body",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "list",
+            "type": "richtext",
+            "required": false
+          },
+          {
+            "name": "link",
+            "type": "multilink",
+            "required": true
+          },
+          {
+            "name": "placement",
+            "type": "option",
+            "required": false
+          },
+          {
+            "name": "background",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "anchor",
+            "type": "text",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "sideBySide",
+        "displayName": null,
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 3,
+        "fields": [
+          {
+            "name": "bloks",
+            "type": "bloks",
+            "required": true
+          },
+          {
+            "name": "alignment",
+            "type": "option",
+            "required": false
+          },
+          {
+            "name": "small",
+            "type": "boolean",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "smallHighlight",
+        "displayName": "Utvalgte prosjekter (2x)",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 1,
+        "fields": [
+          {
+            "name": "projects",
+            "type": "options",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "some",
+        "displayName": null,
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 2,
+        "fields": [
+          {
+            "name": "linkedInText",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "IgText",
+            "type": "text",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "space",
+        "displayName": null,
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 0,
+        "fields": []
+      },
+      {
+        "name": "speaker",
+        "displayName": "Foredragsholder",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 2,
+        "fields": [
+          {
+            "name": "media",
+            "type": "asset",
+            "required": false
+          },
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "speakerGrid",
+        "displayName": "Foredragsholdere - grid",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 1,
+        "fields": [
+          {
+            "name": "speaker",
+            "type": "bloks",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "summary",
+        "displayName": null,
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 5,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "text",
+            "type": "richtext",
+            "required": false
+          },
+          {
+            "name": "buttonText",
+            "type": "text",
+            "required": true
+          },
+          {
+            "name": "buttonTextClose",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "backgroundRgbCode",
+            "type": "option",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "talk",
+        "displayName": "Foredrag",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 3,
+        "fields": [
+          {
+            "name": "media",
+            "type": "asset",
+            "required": false
+          },
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "description",
+            "type": "textarea",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "talksGrid",
+        "displayName": "Foredrag - grid",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 3,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "description",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "talks",
+            "type": "bloks",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "teamTailorLink",
+        "displayName": null,
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 2,
+        "fields": [
+          {
+            "name": "label",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "link",
+            "type": "text",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "testpage",
+        "displayName": null,
+        "isRoot": true,
+        "isNestable": false,
+        "fieldCount": 0,
+        "fields": []
+      },
+      {
+        "name": "textWithImage",
+        "displayName": "Tekst med bilde",
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 9,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "tab-f4c9b660-a635-4b7e-907b-15948d8310b3",
+            "type": "tab",
+            "required": false
+          },
+          {
+            "name": "altImage",
+            "type": "asset",
+            "required": false
+          },
+          {
+            "name": "body",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "callToActionText",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "link",
+            "type": "multilink",
+            "required": false
+          },
+          {
+            "name": "image",
+            "type": "asset",
+            "required": false
+          },
+          {
+            "name": "placement",
+            "type": "option",
+            "required": false
+          },
+          {
+            "name": "wide",
+            "type": "boolean",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "typeform",
+        "displayName": null,
+        "isRoot": false,
+        "isNestable": true,
+        "fieldCount": 1,
+        "fields": [
+          {
+            "name": "formId",
+            "type": "text",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "Video",
+        "displayName": null,
+        "isRoot": true,
+        "isNestable": false,
+        "fieldCount": 11,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "subtext",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "highlightTags",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "vimeoId",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "twentyThreeEmbed",
+            "type": "markdown",
+            "required": false
+          },
+          {
+            "name": "body",
+            "type": "bloks",
+            "required": false
+          },
+          {
+            "name": "image",
+            "type": "asset",
+            "required": false
+          },
+          {
+            "name": "videoSeries",
+            "type": "options",
+            "required": false
+          },
+          {
+            "name": "tab-dd840f28-3d3c-48c5-8d09-a1ec57696e92",
+            "type": "tab",
+            "required": false
+          },
+          {
+            "name": "metaFields",
+            "type": "custom",
+            "required": false
+          },
+          {
+            "name": "videoCollection",
+            "type": "options",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "videoSlider",
+        "displayName": null,
+        "isRoot": true,
+        "isNestable": true,
+        "fieldCount": 3,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "videos",
+            "type": "options",
+            "required": false
+          },
+          {
+            "name": "withTags",
+            "type": "boolean",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "Webinar",
+        "displayName": null,
+        "isRoot": true,
+        "isNestable": false,
+        "fieldCount": 9,
+        "fields": [
+          {
+            "name": "title",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "subtext",
+            "type": "textarea",
+            "required": false
+          },
+          {
+            "name": "highlightTags",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "vimeoId",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "twentyThreeEmbed",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "image",
+            "type": "asset",
+            "required": false
+          },
+          {
+            "name": "body",
+            "type": "bloks",
+            "required": false
+          },
+          {
+            "name": "tab-efba2f7d-79f5-48a0-b414-32f9141783ec",
+            "type": "tab",
+            "required": false
+          },
+          {
+            "name": "metaFields",
+            "type": "custom",
+            "required": false
+          }
+        ]
+      }
+    ]
+  },
+  "stories": {
+    "total": 909,
+    "analysis": {
+      "total": 909,
+      "byContentType": {
+        "Video": 270,
+        "project": 123,
+        "Article": 75,
+        "Person": 87,
+        "Webinar": 2,
+        "News": 34,
+        "Landing": 57,
+        "Jobs": 50,
+        "Arrangmement": 33,
+        "videoSlider": 21,
+        "HubspotPage": 70,
+        "Service": 30,
+        "EBook": 31,
+        "unknown": 21,
+        "Kunnskap": 1,
+        "Page": 1,
+        "root": 3
+      },
+      "byFolder": {
+        "videoer": 268,
+        "prosjekter": 125,
+        "artikler": 75,
+        "employees": 88,
+        "webinar": 6,
+        "nyheter": 35,
+        "arrangementer": 53,
+        "karriere": 66,
+        "innholdssider": 84,
+        "videosamlinger": 22,
+        "tjenester": 45,
+        "e-boker": 32,
+        "statics": 2,
+        "sann-jobber-vi": 1,
+        "kunnskap": 3,
+        "onboarding": 1,
+        "om-oss": 1,
+        "kontakt": 1,
+        "home": 1
+      },
+      "byTag": {
+        "Digital Workplace": 278,
+        "Microsoft 365": 200,
+        "SharePoint & Teams": 84,
+        "Generativ AI": 95,
+        "eCommerce": 138,
+        "No-code": 69,
+        "CRM": 28,
+        "IT-service & support": 42,
+        "Arbeidsstyringsplattformer": 47,
+        "Google Workspace": 30,
+        "Sikkerhet": 25,
+        "Seminar": 28,
+        "Infrastruktur": 8,
+        "Maskinvare": 18,
+        "Systemutvikling": 6,
+        "Digital arbeidsplass": 2,
+        "AI": 3,
+        "App og automasjon": 3,
+        "Admin": 15,
+        "Service": 6,
+        "Alle": 1
+      },
+      "languages": [],
+      "hasTranslations": false,
+      "publishedCount": 697,
+      "draftCount": 212
+    }
+  },
+  "assets": {
+    "total": 2957,
+    "analysis": {
+      "total": 2957,
+      "totalSize": 7866722025,
+      "byType": {
+        "jpg": 1202,
+        "webp": 41,
+        "png": 1276,
+        "svg": 48,
+        "jpeg": 274,
+        "mp4": 31,
+        "mov": 1,
+        "avif": 3,
+        "heic": 3,
+        "psd": 1,
+        "gif": 54,
+        "tiff": 1,
+        "com/f/139140/2846x1664/e9f0107763/oleana-forside": 1,
+        "com/f/139140/1920x1080/ce460e9e5c/sjekkliste-ebok-it-sikkerhet": 1,
+        "com/f/139140/1025x1060/e30e02e123/rammeverk-sikkerhet": 1,
+        "com/f/139140/960x540/18cade8d74/rammeverk-sikkerhet": 1,
+        "com/f/139140/1920x1080/1b576c5438/sjekkliste-crm-system": 1,
+        "com/f/139140/1920x1080/ff4938b1a9/e-bok-anbefalte-verktoy": 1,
+        "com/f/139140/1920x1080/31b13d70e7/crm-system-sjekkliste": 1,
+        "com/f/139140/960x540/ff37c49f0d/sjekkliste-crm-sustem": 1,
+        "com/f/139140/3576x2002/ee0b93a33a/martin-tn-1": 1,
+        "com/f/139140/3560x2000/c29b59b5f7/planlegging-av-oppgaver-3": 1,
+        "com/f/139140/3480x1974/822c0308e6/introduksjon-v1": 1,
+        "pdf": 1,
+        "com/f/139140/1920x1080/3317c879c4/webinar-sikkerhet": 1,
+        "com/f/139140/1920x2560/11d843ca9f/haavard-folka-fritid": 1,
+        "com/f/139140/1422x1422/f3e45bdd30/haakon-folka-fritid": 1,
+        "com/f/139140/2560x1920/0c4171370a/audun-folka-fritid": 1,
+        "com/f/139140/754x755/7b4591e5bd/max-folka-fritid": 1,
+        "com/f/139140/1920x2560/9654ddd442/henrik-folka-fritid": 1,
+        "com/f/139140/1920x2560/430e7f4782/magnus-folka-fritid": 1,
+        "com/f/139140/768x1024/fb2ca2e422/martin-folka-fritid": 1,
+        "com/f/139140/1920x2560/43afde1ecc/veronica-folka-fritid": 1,
+        "com/f/139140/1502x1002/218c17103e/e-post-internt": 1
+      },
+      "largestFiles": [
+        {
+          "filename": "https://s3.amazonaws.com/a.storyblok.com/f/139140/x/066ca868c3/frend_bildesekvens.mp4",
+          "size": "132.63 MB",
+          "sizeBytes": 139067475
+        },
+        {
+          "filename": "https://s3.amazonaws.com/a.storyblok.com/f/139140/x/b13e0ea3d6/ecom-event-levende-bilder-2024.mp4",
+          "size": "98.73 MB",
+          "sizeBytes": 103522114
+        },
+        {
+          "filename": "https://s3.amazonaws.com/a.storyblok.com/f/139140/x/464b082c5f/klippet-sammen.MP4",
+          "size": "94.34 MB",
+          "sizeBytes": 98923819
+        },
+        {
+          "filename": "https://s3.amazonaws.com/a.storyblok.com/f/139140/x/4bcef29967/frend_nov_bildekarusell_1_1.mp4",
+          "size": "80.2 MB",
+          "sizeBytes": 84095918
+        },
+        {
+          "filename": "https://s3.amazonaws.com/a.storyblok.com/f/139140/1920x1080/e6c96fbc3d/visuals-rauma-test-gif.gif",
+          "size": "78.33 MB",
+          "sizeBytes": 82137071
+        },
+        {
+          "filename": "https://s3.amazonaws.com/a.storyblok.com/f/139140/x/4de7bd65c6/toughest.mp4",
+          "size": "73.21 MB",
+          "sizeBytes": 76764174
+        },
+        {
+          "filename": "https://s3.amazonaws.com/a.storyblok.com/f/139140/x/b8c3b1f8ff/ecom-event-2024-levende-bilder-1-1.mp4",
+          "size": "49.27 MB",
+          "sizeBytes": 51668043
+        },
+        {
+          "filename": "https://s3.amazonaws.com/a.storyblok.com/f/139140/x/dc2a4eb991/ecom-event-levende-bilder-1-1.mp4",
+          "size": "46.93 MB",
+          "sizeBytes": 49211714
+        },
+        {
+          "filename": "https://s3.amazonaws.com/a.storyblok.com/f/139140/x/58543d91f3/ecom-event-2024-levende-bilder-1-1.mp4",
+          "size": "46.24 MB",
+          "sizeBytes": 48489951
+        },
+        {
+          "filename": "https://s3.amazonaws.com/a.storyblok.com/f/139140/1080x608/832dd4aeb6/3-gif-bytimo.gif",
+          "size": "45.24 MB",
+          "sizeBytes": 47432656
+        }
+      ],
+      "totalSizeFormatted": "7.33 GB"
+    }
+  },
+  "migrationChallenges": [
+    {
+      "severity": "medium",
+      "category": "Content",
+      "issue": "Rich Text Conversion",
+      "description": "Found 14 rich text fields. Storyblok and Webflow use different rich text formats, conversion needed.",
+      "affectedItems": 14
+    },
+    {
+      "severity": "medium",
+      "category": "Assets",
+      "issue": "Large Asset Volume",
+      "description": "2957 assets to migrate. Will need efficient asset upload strategy.",
+      "affectedItems": 2957
+    },
+    {
+      "severity": "high",
+      "category": "Custom Fields",
+      "issue": "Custom Field Types",
+      "description": "Found 12 custom field types. Will need manual mapping to Webflow field types.",
+      "affectedItems": 12
+    }
+  ]
+}
