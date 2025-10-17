@@ -747,6 +747,7 @@
       <div class="toolbar">
         <button class="btn btn-secondary" onclick="runDiscovery()">Refresh Data</button>
         <button class="btn" onclick="bulkTransform()">Transform Selected</button>
+        <button class="btn btn-secondary" onclick="logout()" style="margin-left: 12px;">Sign Out</button>
       </div>
     </div>
 
@@ -1382,6 +1383,18 @@
       document.querySelectorAll('.tab').forEach(el => {
         el.classList.toggle('active', el.textContent.toLowerCase().includes(tab.substring(0, 4)));
       });
+    }
+
+    // Logout function
+    async function logout() {
+      try {
+        const res = await fetch('/api/logout', { method: 'POST' });
+        if (res.ok) {
+          window.location.href = '/login';
+        }
+      } catch (e) {
+        console.error('Logout failed:', e);
+      }
     }
 
     // Initialize

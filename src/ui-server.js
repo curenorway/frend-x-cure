@@ -7,6 +7,7 @@
 
 import 'dotenv/config';
 import express from 'express';
+import session from 'express-session';
 import { WebSocketServer } from 'ws';
 import { createServer } from 'http';
 import fs from 'fs';
@@ -29,11 +30,24 @@ const server = createServer(app);
 const wss = new WebSocketServer({ server });
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 const PORT = process.env.PORT || 3000;
 
-// HTTP Basic Authentication middleware
-const basicAuth = (req, res, next) => {
+// Session configuration
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'cure-frend-migration-tool-secret-key-2024',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
+}));
+
+// Authentication middleware
+const requireAuth = (req, res, next) => {
   // Skip auth if credentials are not set (for local development)
   const authUsername = process.env.AUTH_USERNAME;
   const authPassword = process.env.AUTH_PASSWORD;
@@ -42,27 +56,55 @@ const basicAuth = (req, res, next) => {
     return next();
   }
 
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader || !authHeader.startsWith('Basic ')) {
-    res.setHeader('WWW-Authenticate', 'Basic realm="Migration Dashboard"');
-    return res.status(401).send('Authentication required');
-  }
-
-  const base64Credentials = authHeader.split(' ')[1];
-  const credentials = Buffer.from(base64Credentials, 'base64').toString('utf-8');
-  const [username, password] = credentials.split(':');
-
-  if (username === authUsername && password === authPassword) {
+  // Check if user is logged in
+  if (req.session && req.session.authenticated) {
     return next();
   }
 
-  res.setHeader('WWW-Authenticate', 'Basic realm="Migration Dashboard"');
-  return res.status(401).send('Invalid credentials');
+  // For API routes, return 401
+  if (req.path.startsWith('/api/')) {
+    return res.status(401).json({ error: 'Authentication required' });
+  }
+
+  // For other routes, redirect to login
+  res.redirect('/login');
 };
 
-// Apply auth to all routes
-app.use(basicAuth);
+// Login endpoint
+app.post('/api/login', (req, res) => {
+  const { username, password } = req.body;
+  const authUsername = process.env.AUTH_USERNAME;
+  const authPassword = process.env.AUTH_PASSWORD;
+
+  // If auth is not configured, allow access
+  if (!authUsername || !authPassword) {
+    req.session.authenticated = true;
+    return res.json({ success: true });
+  }
+
+  // Check credentials
+  if (username === authUsername && password === authPassword) {
+    req.session.authenticated = true;
+    res.json({ success: true });
+  } else {
+    res.status(401).json({ error: 'Invalid credentials' });
+  }
+});
+
+// Logout endpoint
+app.post('/api/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return res.status(500).json({ error: 'Logout failed' });
+    }
+    res.json({ success: true });
+  });
+});
+
+// Serve login page (no auth required)
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, '../ui/login.html'));
+});
 
 // Store active connections
 const clients = new Set();
@@ -70,10 +112,17 @@ const clients = new Set();
 // Store operation logs
 const operationLog = [];
 
-// Serve static files from ui directory
+// Serve static files for login page (fonts, logos) without auth
+app.use('/fonts', express.static(path.join(__dirname, '../ui/fonts')));
+app.use('/logos', express.static(path.join(__dirname, '../ui/logos')));
+
+// Apply auth to all other routes
+app.use(requireAuth);
+
+// Serve main UI files (protected)
 app.use(express.static(path.join(__dirname, '../ui')));
 
-// Serve reports directory
+// Serve reports directory (protected)
 app.use('/reports', express.static(path.join(__dirname, '../reports')));
 
 // API: Get discovery report
