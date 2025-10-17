@@ -18,6 +18,7 @@ import { transformProjects } from './transformers/projects.js';
 import { transformArticles } from './transformers/articles.js';
 import { transformNews } from './transformers/news.js';
 import { createWebflowClient, mapToWebflowFields } from './integrations/webflow.js';
+import { createAIGenerator } from './integrations/ai-collection-generator.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -637,6 +638,126 @@ app.post('/api/webflow/upload', async (req, res) => {
       timestamp: new Date().toISOString(),
       type: 'webflow-upload',
       contentType,
+      error: error.message
+    });
+
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// API: Analyze and suggest Webflow collections using AI
+app.post('/api/webflow/ai-analyze', async (req, res) => {
+  const { contentType } = req.body;
+
+  try {
+    // Load transformed data
+    let dataToAnalyze = {};
+
+    if (contentType === 'all') {
+      // Analyze all content types
+      const contentTypes = ['team-members', 'videos', 'projects', 'articles', 'news'];
+      for (const type of contentTypes) {
+        try {
+          const filePath = `./output/transformed/${type}.json`;
+          dataToAnalyze[type] = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+        } catch (e) {
+          console.log(`No data for ${type}`);
+        }
+      }
+    } else {
+      // Analyze specific content type
+      const filePath = `./output/transformed/${contentType}.json`;
+      dataToAnalyze[contentType] = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+    }
+
+    // Create AI generator
+    const webflow = createWebflowClient();
+    const aiGenerator = createAIGenerator(webflow);
+
+    broadcast({
+      type: 'ai-analysis-start',
+      contentType
+    });
+
+    // Analyze data and generate suggestions
+    const suggestions = await aiGenerator.analyzeAndSuggestCollections(dataToAnalyze);
+
+    broadcast({
+      type: 'ai-analysis-complete',
+      suggestions
+    });
+
+    operationLog.push({
+      timestamp: new Date().toISOString(),
+      type: 'ai-analysis',
+      contentType,
+      success: true
+    });
+
+    res.json({
+      success: true,
+      suggestions,
+      message: 'AI analysis complete'
+    });
+  } catch (error) {
+    broadcast({
+      type: 'ai-analysis-error',
+      error: error.message
+    });
+
+    operationLog.push({
+      timestamp: new Date().toISOString(),
+      type: 'ai-analysis',
+      contentType,
+      error: error.message
+    });
+
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// API: Create Webflow collection based on AI suggestion
+app.post('/api/webflow/create-collection', async (req, res) => {
+  const { schema, siteId } = req.body;
+
+  try {
+    const webflow = createWebflowClient();
+    const aiGenerator = createAIGenerator(webflow);
+
+    broadcast({
+      type: 'collection-creation-start',
+      collectionName: schema.collection.name
+    });
+
+    // Create the collection
+    const collection = await aiGenerator.createWebflowCollection(schema, siteId || webflow.siteId);
+
+    broadcast({
+      type: 'collection-creation-complete',
+      collection
+    });
+
+    operationLog.push({
+      timestamp: new Date().toISOString(),
+      type: 'create-collection',
+      collectionName: schema.collection.name,
+      success: true
+    });
+
+    res.json({
+      success: true,
+      collection,
+      message: `Collection "${schema.collection.name}" created successfully`
+    });
+  } catch (error) {
+    broadcast({
+      type: 'collection-creation-error',
+      error: error.message
+    });
+
+    operationLog.push({
+      timestamp: new Date().toISOString(),
+      type: 'create-collection',
       error: error.message
     });
 

@@ -503,6 +503,20 @@
         <span>Transform Status</span>
       </div>
     </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Webflow</div>
+      <div class="nav-item" onclick="showWebflow()">
+        <span>Collections</span>
+        <span class="nav-badge" id="webflow-badge">New</span>
+      </div>
+      <div class="nav-item" onclick="showAIAnalysis()">
+        <span>AI Analysis</span>
+      </div>
+      <div class="nav-item" onclick="showUploadCenter()">
+        <span>Upload Center</span>
+      </div>
+    </div>
   </div>
 
   <div class="main">
@@ -922,6 +936,492 @@
         </div>
         <div class="empty-state">
           <p>Transform status tracking coming soon</p>
+        </div>
+      `;
+    }
+
+    // Webflow Integration Functions
+    let webflowCollections = [];
+    let aiSuggestions = {};
+
+    async function showWebflow() {
+      setActiveNav('Collections');
+
+      // Load Webflow collections
+      try {
+        const res = await fetch('/api/webflow/collections');
+        if (res.ok) {
+          webflowCollections = await res.json();
+        }
+      } catch (e) {
+        console.error('Failed to load Webflow collections:', e);
+      }
+
+      document.getElementById('main-content').innerHTML = `
+        <div class="page-header">
+          <div class="page-title">Webflow Collections</div>
+          <div class="page-subtitle">Manage your Webflow CMS collections and field mappings</div>
+        </div>
+
+        ${webflowCollections.length === 0 ? `
+          <div class="warning-box">
+            <strong>No Webflow Collections Found</strong> - Use AI Analysis to generate collection schemas based on your transformed data
+          </div>
+        ` : ''}
+
+        <div class="tabs">
+          <div class="tab active" onclick="showWebflowTab('existing')">Existing Collections</div>
+          <div class="tab" onclick="showWebflowTab('create')">Create New</div>
+          <div class="tab" onclick="showWebflowTab('mapping')">Field Mapping</div>
+        </div>
+
+        <div id="webflow-tab-content">
+          ${renderWebflowCollections()}
+        </div>
+      `;
+    }
+
+    function renderWebflowCollections() {
+      if (webflowCollections.length === 0) {
+        return `
+          <div class="empty-state">
+            <h3>No Collections Found</h3>
+            <p>You haven't created any Webflow collections yet.</p>
+            <button class="btn" onclick="showAIAnalysis()">Use AI to Generate Collections</button>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="data-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Collection Name</th>
+                <th>Slug</th>
+                <th>Items</th>
+                <th>Fields</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${webflowCollections.map(col => `
+                <tr>
+                  <td>
+                    <div class="item-name">${col.name}</div>
+                    <div class="item-meta">ID: ${col._id}</div>
+                  </td>
+                  <td>${col.slug}</td>
+                  <td>${col.count || 0}</td>
+                  <td>${col.fields?.length || 0} fields</td>
+                  <td>
+                    <div class="actions">
+                      <button class="icon-btn" onclick="viewCollection('${col._id}')">View</button>
+                      <button class="icon-btn" onclick="uploadToCollection('${col._id}')">Upload</button>
+                    </div>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    async function showAIAnalysis() {
+      setActiveNav('AI Analysis');
+
+      document.getElementById('main-content').innerHTML = `
+        <div class="page-header">
+          <div class="page-title">AI-Powered Collection Analysis</div>
+          <div class="page-subtitle">Let AI analyze your data and suggest optimal Webflow collection schemas</div>
+        </div>
+
+        <div class="warning-box">
+          <strong>How it works:</strong> Claude AI will analyze your transformed data and suggest the best Webflow collection structure, including field types, validations, and relationships.
+        </div>
+
+        <div class="stats-row">
+          ${['videos', 'projects', 'articles', 'news', 'team-members'].map(type => {
+            const data = transformedData[type];
+            const count = data?.successful || 0;
+            return `
+              <div class="stat-card" style="cursor: pointer" onclick="analyzeContentType('${type}')">
+                <div class="stat-value">${count}</div>
+                <div class="stat-label">${type.replace('-', ' ')}</div>
+                <div class="stat-change ${count > 0 ? 'success' : ''}">
+                  ${count > 0 ? 'Click to analyze' : 'Transform first'}
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+
+        ${Object.keys(aiSuggestions).length > 0 ? `
+          <h3 style="margin: 24px 0 16px">AI Suggestions</h3>
+          ${renderAISuggestions()}
+        ` : ''}
+      `;
+    }
+
+    async function analyzeContentType(type) {
+      const data = transformedData[type];
+      if (!data || data.successful === 0) {
+        alert('Please transform this content type first');
+        return;
+      }
+
+      document.getElementById('main-content').innerHTML += `
+        <div class="panel" id="ai-analysis-${type}">
+          <div class="panel-header">Analyzing ${type}...</div>
+          <div class="panel-body">
+            <div class="empty-state">
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 50%; animation: pulse 1s infinite"></div>
+              </div>
+              <p>AI is analyzing your data structure...</p>
+            </div>
+          </div>
+        </div>
+      `;
+
+      try {
+        const res = await fetch('/api/webflow/ai-analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contentType: type })
+        });
+
+        if (res.ok) {
+          const suggestions = await res.json();
+          aiSuggestions[type] = suggestions[type];
+
+          // Update the panel with results
+          document.getElementById(`ai-analysis-${type}`).innerHTML = `
+            <div class="panel-header">${type} - AI Analysis Complete</div>
+            <div class="panel-body">
+              ${renderCollectionSchema(suggestions[type])}
+            </div>
+          `;
+        }
+      } catch (e) {
+        console.error('AI analysis failed:', e);
+        document.getElementById(`ai-analysis-${type}`).innerHTML = `
+          <div class="panel-header">${type} - Analysis Failed</div>
+          <div class="panel-body">
+            <div class="warning-box">
+              <strong>Error:</strong> ${e.message}
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function renderCollectionSchema(suggestion) {
+      if (!suggestion || !suggestion.schema) return '<p>No schema generated</p>';
+
+      const { schema, statistics, insights } = suggestion;
+
+      return `
+        <div style="margin-bottom: 20px">
+          <h4>Collection Details</h4>
+          <div class="field-row">
+            <div class="field-label">Name:</div>
+            <div class="field-value">${schema.collection.name}</div>
+          </div>
+          <div class="field-row">
+            <div class="field-label">Slug:</div>
+            <div class="field-value">${schema.collection.slug}</div>
+          </div>
+          <div class="field-row">
+            <div class="field-label">Items:</div>
+            <div class="field-value">${statistics.totalItems} items ready</div>
+          </div>
+        </div>
+
+        <h4>Suggested Fields (${schema.fields.length})</h4>
+        <table style="width: 100%; margin: 16px 0">
+          <thead>
+            <tr>
+              <th>Field Name</th>
+              <th>Type</th>
+              <th>Required</th>
+              <th>Help Text</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${schema.fields.map(field => `
+              <tr>
+                <td><strong>${field.name}</strong><br><small>${field.slug}</small></td>
+                <td><span class="status-badge">${field.type}</span></td>
+                <td>${field.required ? '✓' : ''}</td>
+                <td><small>${field.helpText || '—'}</small></td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+
+        ${insights && insights.length > 0 ? `
+          <h4>Insights</h4>
+          ${insights.map(i => `
+            <div class="warning-box" style="margin: 8px 0">
+              <strong>${i.type}:</strong> ${i.message}
+            </div>
+          `).join('')}
+        ` : ''}
+
+        <div style="margin-top: 20px; display: flex; gap: 8px">
+          <button class="btn" onclick="createWebflowCollection('${schema.collection.slug}')">
+            Create Collection in Webflow
+          </button>
+          <button class="btn btn-secondary" onclick="downloadSchema('${schema.collection.slug}')">
+            Download Schema JSON
+          </button>
+        </div>
+      `;
+    }
+
+    async function showUploadCenter() {
+      setActiveNav('Upload Center');
+
+      document.getElementById('main-content').innerHTML = `
+        <div class="page-header">
+          <div class="page-title">Upload Center</div>
+          <div class="page-subtitle">Upload transformed content to Webflow CMS</div>
+        </div>
+
+        <div class="warning-box">
+          <strong>Dry Run Mode:</strong> Test uploads without actually creating items in Webflow
+        </div>
+
+        <div class="filters">
+          <div class="filter-group">
+            <label class="filter-label">Content Type:</label>
+            <select id="upload-content-type">
+              <option value="">Select content type...</option>
+              ${Object.keys(transformedData).map(type => `
+                <option value="${type}">${type}</option>
+              `).join('')}
+            </select>
+          </div>
+          <div class="filter-group">
+            <label class="filter-label">Collection:</label>
+            <select id="upload-collection">
+              <option value="">Select Webflow collection...</option>
+              ${webflowCollections.map(col => `
+                <option value="${col._id}">${col.name}</option>
+              `).join('')}
+            </select>
+          </div>
+          <div class="filter-group">
+            <input type="checkbox" id="dry-run" checked>
+            <label for="dry-run">Dry Run (Validate Only)</label>
+          </div>
+          <button class="btn" onclick="startUpload()">Start Upload</button>
+        </div>
+
+        <div id="upload-status"></div>
+        <div id="upload-progress"></div>
+        <div id="upload-results"></div>
+      `;
+    }
+
+    async function startUpload() {
+      const contentType = document.getElementById('upload-content-type').value;
+      const collectionId = document.getElementById('upload-collection').value;
+      const dryRun = document.getElementById('dry-run').checked;
+
+      if (!contentType || !collectionId) {
+        alert('Please select both content type and collection');
+        return;
+      }
+
+      const data = transformedData[contentType];
+      if (!data || data.successful === 0) {
+        alert('No transformed data available for this content type');
+        return;
+      }
+
+      document.getElementById('upload-status').innerHTML = `
+        <div class="panel">
+          <div class="panel-header">Upload Progress</div>
+          <div class="panel-body">
+            <div class="field-row">
+              <div class="field-label">Mode:</div>
+              <div class="field-value">${dryRun ? 'Dry Run (Validation Only)' : 'Live Upload'}</div>
+            </div>
+            <div class="field-row">
+              <div class="field-label">Items:</div>
+              <div class="field-value">0 / ${data.successful}</div>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="upload-progress-bar" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      try {
+        const res = await fetch('/api/webflow/upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contentType,
+            collectionId,
+            dryRun,
+            limit: 10 // Start with 10 items for testing
+          })
+        });
+
+        if (res.ok) {
+          const results = await res.json();
+
+          document.getElementById('upload-results').innerHTML = `
+            <div class="panel">
+              <div class="panel-header">Upload Results</div>
+              <div class="panel-body">
+                <div class="stats-row">
+                  <div class="stat-card">
+                    <div class="stat-value">${results.successful}</div>
+                    <div class="stat-label">Successful</div>
+                  </div>
+                  <div class="stat-card">
+                    <div class="stat-value">${results.failed}</div>
+                    <div class="stat-label">Failed</div>
+                  </div>
+                  <div class="stat-card">
+                    <div class="stat-value">${results.total}</div>
+                    <div class="stat-label">Total</div>
+                  </div>
+                </div>
+
+                ${results.errors && results.errors.length > 0 ? `
+                  <h4>Errors</h4>
+                  ${results.errors.map(err => `
+                    <div class="warning-box">
+                      <strong>Item:</strong> ${err.item.name}<br>
+                      <strong>Error:</strong> ${err.error}
+                    </div>
+                  `).join('')}
+                ` : ''}
+
+                ${!dryRun && results.successful > 0 ? `
+                  <button class="btn" style="margin-top: 16px" onclick="publishItems('${collectionId}', ${JSON.stringify(results.createdItems.map(i => i._id))})">
+                    Publish Items
+                  </button>
+                ` : ''}
+              </div>
+            </div>
+          `;
+        }
+      } catch (e) {
+        console.error('Upload failed:', e);
+        document.getElementById('upload-results').innerHTML = `
+          <div class="warning-box">
+            <strong>Upload Failed:</strong> ${e.message}
+          </div>
+        `;
+      }
+    }
+
+    async function createWebflowCollection(slug) {
+      const suggestion = Object.values(aiSuggestions).find(s => s?.schema?.collection?.slug === slug);
+      if (!suggestion) {
+        alert('Schema not found');
+        return;
+      }
+
+      if (!confirm(`Create collection "${suggestion.schema.collection.name}" in Webflow?`)) return;
+
+      try {
+        const res = await fetch('/api/webflow/create-collection', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ schema: suggestion.schema })
+        });
+
+        if (res.ok) {
+          alert('Collection created successfully!');
+          showWebflow(); // Refresh collections view
+        } else {
+          const error = await res.text();
+          alert(`Failed to create collection: ${error}`);
+        }
+      } catch (e) {
+        alert(`Error: ${e.message}`);
+      }
+    }
+
+    function downloadSchema(slug) {
+      const suggestion = Object.values(aiSuggestions).find(s => s?.schema?.collection?.slug === slug);
+      if (!suggestion) return;
+
+      const blob = new Blob([JSON.stringify(suggestion, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${slug}-schema.json`;
+      a.click();
+    }
+
+    async function publishItems(collectionId, itemIds) {
+      if (!confirm(`Publish ${itemIds.length} items to production?`)) return;
+
+      try {
+        const res = await fetch('/api/webflow/publish', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ collectionId, itemIds })
+        });
+
+        if (res.ok) {
+          alert('Items published successfully!');
+        } else {
+          alert('Failed to publish items');
+        }
+      } catch (e) {
+        alert(`Error: ${e.message}`);
+      }
+    }
+
+    function showWebflowTab(tab) {
+      document.querySelectorAll('.tab').forEach(el => {
+        el.classList.toggle('active', el.textContent.toLowerCase().includes(tab.substring(0, 4)));
+      });
+
+      switch(tab) {
+        case 'existing':
+          document.getElementById('webflow-tab-content').innerHTML = renderWebflowCollections();
+          break;
+        case 'create':
+          document.getElementById('webflow-tab-content').innerHTML = renderCreateCollection();
+          break;
+        case 'mapping':
+          document.getElementById('webflow-tab-content').innerHTML = renderFieldMappingConfig();
+          break;
+      }
+    }
+
+    function renderCreateCollection() {
+      return `
+        <div class="panel">
+          <div class="panel-header">Create New Collection</div>
+          <div class="panel-body">
+            <p>Use AI Analysis to automatically generate collection schemas based on your transformed data.</p>
+            <button class="btn" onclick="showAIAnalysis()">Go to AI Analysis</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderFieldMappingConfig() {
+      return `
+        <div class="panel">
+          <div class="panel-header">Configure Field Mappings</div>
+          <div class="panel-body">
+            <p>Field mappings are automatically configured based on your data structure.</p>
+            <p>The AI Analysis tool will suggest optimal field mappings for each content type.</p>
+          </div>
         </div>
       `;
     }
