@@ -1,0 +1,20 @@
+{
+  "name": "storyblok-to-webflow-migration",
+  "version": "1.0.0",
+  "description": "Migration tool for Storyblok to Webflow CMS",
+  "type": "module",
+  "scripts": {
+    "discover": "node src/discover.js",
+    "test-transform": "node src/test-transform.js",
+    "migrate": "node src/migrate.js",
+    "ui": "node src/ui-server.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "ws": "^8.14.0",
+    "open": "^9.1.0"
+  },
+  "devDependencies": {}
+}
