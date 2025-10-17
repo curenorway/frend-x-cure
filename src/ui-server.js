@@ -5,6 +5,7 @@
  * Black and white, data-focused, no fancy styling.
  */
 
+import 'dotenv/config';
 import express from 'express';
 import { WebSocketServer } from 'ws';
 import { createServer } from 'http';
