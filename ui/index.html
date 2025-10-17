@@ -17,7 +17,6 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      border-radius: 0 !important; /* Force no roundness */
     }
 
     :root {
@@ -67,9 +66,10 @@
     }
 
     .logo img {
-      height: 32px;
-      width: auto;
+      width: 60px;
+      height: auto;
       filter: brightness(0) saturate(100%);
+      object-fit: contain;
     }
 
     /* Fix Frend logo rotation */
@@ -84,11 +84,11 @@
     }
 
     .nav-section {
-      padding: 24px 0;
+      padding: 24px 12px;
     }
 
     .nav-label {
-      padding: 0 24px 12px;
+      padding: 0 16px 12px;
       font-size: 12px;
       color: var(--gray-medium);
       letter-spacing: 0.5px;
@@ -96,7 +96,9 @@
     }
 
     .nav-item {
-      padding: 14px 24px;
+      padding: 14px 16px;
+      margin: 4px 0;
+      border-radius: 8px;
       cursor: pointer;
       transition: all 0.2s;
       display: flex;
@@ -184,6 +186,8 @@
       font-family: 'SuisseIntl', sans-serif;
       letter-spacing: 0.5px;
       transition: all 0.2s;
+      border: none;
+      border-radius: 8px;
     }
 
     .btn:hover {
@@ -321,7 +325,8 @@
     }
 
     thead {
-      background: var(--brand-orange);
+      background: var(--gray-lighter);
+      border-bottom: 2px solid var(--gray-light);
     }
 
     th {
@@ -409,6 +414,8 @@
       font-family: 'SuisseIntl', sans-serif;
       letter-spacing: 0.5px;
       transition: all 0.2s;
+      border: none;
+      border-radius: 6px;
     }
 
     .icon-btn:hover {
@@ -423,12 +430,13 @@
     }
 
     .panel-header {
-      background: var(--brand-orange);
+      background: var(--gray-lighter);
       padding: 18px 24px;
       font-weight: 500;
       font-size: 16px;
       color: var(--brand-dark);
       letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--gray-light);
     }
 
     .panel-body {
@@ -589,6 +597,8 @@
       color: var(--brand-dark);
       font-weight: 500;
       transition: all 0.2s;
+      border: none;
+      border-radius: 8px;
     }
 
     .close-btn:hover {
@@ -616,10 +626,11 @@
       margin-top: 32px;
     }
 
-    /* Remove all remaining borders and rounded corners */
-    * {
-      border-radius: 0 !important;
-      border: none !important;
+    /* Remove unwanted borders */
+    input[type="text"],
+    input[type="password"],
+    select {
+      border: none;
     }
 
     input:focus,
@@ -658,10 +669,13 @@
       position: relative;
       vertical-align: middle;
       margin-right: 8px;
+      border: 2px solid var(--gray-medium);
+      border-radius: 4px;
     }
 
     input[type="checkbox"]:checked {
       background: var(--brand-orange);
+      border-color: var(--brand-orange);
     }
 
     input[type="checkbox"]:checked::after {
