@@ -4,10 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cure x Frend - Migration Tool</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
+    /* Custom Font */
+    @font-face {
+      font-family: 'SuisseIntl';
+      src: url('fonts/SuisseIntl-Medium.otf') format('opentype');
+      font-weight: 500;
+      font-style: normal;
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -25,7 +30,7 @@
     }
 
     body {
-      font-family: 'IBM Plex Sans', sans-serif;
+      font-family: 'SuisseIntl', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--white);
       color: var(--brand-dark);
       font-size: 16px;
@@ -49,13 +54,33 @@
       background: var(--brand-orange);
       padding: 32px 24px;
       margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
     }
 
     .logo {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .logo img {
+      height: 32px;
+      width: auto;
+      filter: brightness(0) saturate(100%);
+    }
+
+    /* Fix Frend logo rotation */
+    .logo img:last-child {
+      transform: rotate(-90deg);
+    }
+
+    .logo-divider {
       color: var(--brand-dark);
       font-size: 24px;
-      font-weight: 700;
-      letter-spacing: -0.5px;
+      font-weight: 300;
     }
 
     .nav-section {
@@ -66,9 +91,8 @@
       padding: 0 24px 12px;
       font-size: 12px;
       color: var(--gray-medium);
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      font-weight: 600;
+      letter-spacing: 0.5px;
+      font-weight: 500;
     }
 
     .nav-item {
@@ -92,22 +116,12 @@
       color: var(--brand-dark);
     }
 
-    .nav-item.active::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 4px;
-      background: var(--brand-dark);
-    }
-
     .nav-badge {
       background: var(--white);
       color: var(--brand-dark);
       padding: 4px 10px;
       font-size: 12px;
-      font-weight: 600;
+      font-weight: 500;
     }
 
     .nav-item.active .nav-badge {
@@ -131,7 +145,6 @@
       position: sticky;
       top: 0;
       z-index: 50;
-      border-bottom: 2px solid var(--brand-orange);
     }
 
     .search-box {
@@ -143,12 +156,11 @@
     }
 
     .search-box input {
-      border: none;
       background: none;
       outline: none;
       width: 100%;
       font-size: 15px;
-      font-family: 'IBM Plex Sans', sans-serif;
+      font-family: 'SuisseIntl', sans-serif;
       color: var(--brand-dark);
     }
 
@@ -164,14 +176,12 @@
     .btn {
       background: var(--brand-orange);
       color: var(--brand-dark);
-      border: none;
       padding: 12px 24px;
       font-size: 15px;
-      font-weight: 600;
+      font-weight: 500;
       cursor: pointer;
       white-space: nowrap;
-      font-family: 'IBM Plex Sans', sans-serif;
-      text-transform: uppercase;
+      font-family: 'SuisseIntl', sans-serif;
       letter-spacing: 0.5px;
       transition: all 0.2s;
     }
@@ -187,9 +197,8 @@
     }
 
     .btn-secondary {
-      background: transparent;
+      background: var(--gray-lighter);
       color: var(--brand-dark);
-      border: 2px solid var(--brand-dark);
     }
 
     .btn-secondary:hover {
@@ -207,7 +216,7 @@
 
     .page-title {
       font-size: 36px;
-      font-weight: 700;
+      font-weight: 500;
       margin-bottom: 8px;
       color: var(--brand-dark);
     }
@@ -238,17 +247,15 @@
     .filter-label {
       font-size: 14px;
       color: var(--brand-dark);
-      font-weight: 600;
-      text-transform: uppercase;
+      font-weight: 500;
       letter-spacing: 0.5px;
     }
 
-    select, input[type="checkbox"] {
+    select {
       font-size: 15px;
       padding: 8px 12px;
-      border: 2px solid var(--brand-dark);
       background: var(--white);
-      font-family: 'IBM Plex Sans', sans-serif;
+      font-family: 'SuisseIntl', sans-serif;
       color: var(--brand-dark);
     }
 
@@ -280,7 +287,7 @@
 
     .stat-value {
       font-size: 48px;
-      font-weight: 700;
+      font-weight: 500;
       margin-bottom: 8px;
       color: var(--brand-dark);
       line-height: 1;
@@ -289,9 +296,8 @@
     .stat-label {
       font-size: 14px;
       color: var(--gray-medium);
-      text-transform: uppercase;
       letter-spacing: 0.5px;
-      font-weight: 600;
+      font-weight: 500;
     }
 
     .stat-change {
@@ -307,7 +313,6 @@
     .data-table {
       background: var(--white);
       overflow: hidden;
-      box-shadow: 0 0 0 2px var(--gray-lighter);
     }
 
     table {
@@ -323,20 +328,23 @@
       text-align: left;
       padding: 18px 20px;
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 500;
       color: var(--brand-dark);
-      text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
     }
 
     td {
       padding: 18px 20px;
-      border-bottom: 2px solid var(--gray-lighter);
       font-size: 15px;
+      background: var(--white);
+    }
+
+    tbody tr:nth-child(even) {
+      background: var(--gray-lighter);
     }
 
     tbody tr:hover {
-      background: var(--gray-lighter);
+      background: var(--gray-light);
     }
 
     .row-checkbox {
@@ -351,8 +359,7 @@
       display: inline-block;
       padding: 6px 14px;
       font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
+      font-weight: 500;
       letter-spacing: 0.5px;
     }
 
@@ -377,7 +384,7 @@
     }
 
     .item-name {
-      font-weight: 600;
+      font-weight: 500;
       margin-bottom: 4px;
       color: var(--brand-dark);
     }
@@ -393,15 +400,13 @@
     }
 
     .icon-btn {
-      background: transparent;
+      background: var(--gray-lighter);
       color: var(--brand-dark);
-      border: 2px solid var(--brand-dark);
       padding: 8px 16px;
       cursor: pointer;
       font-size: 13px;
-      font-weight: 600;
-      font-family: 'IBM Plex Sans', sans-serif;
-      text-transform: uppercase;
+      font-weight: 500;
+      font-family: 'SuisseIntl', sans-serif;
       letter-spacing: 0.5px;
       transition: all 0.2s;
     }
@@ -415,16 +420,14 @@
     .panel {
       background: var(--white);
       overflow: hidden;
-      box-shadow: 0 0 0 2px var(--gray-lighter);
     }
 
     .panel-header {
       background: var(--brand-orange);
       padding: 18px 24px;
-      font-weight: 700;
+      font-weight: 500;
       font-size: 16px;
       color: var(--brand-dark);
-      text-transform: uppercase;
       letter-spacing: 0.5px;
     }
 
@@ -432,6 +435,7 @@
       padding: 28px;
       max-height: 600px;
       overflow-y: auto;
+      background: var(--gray-lighter);
     }
 
     .field-row {
@@ -439,14 +443,19 @@
       grid-template-columns: 180px 1fr;
       gap: 16px;
       padding: 12px 0;
-      border-bottom: 2px solid var(--gray-lighter);
+    }
+
+    .field-row:nth-child(even) {
+      background: var(--white);
+      margin: 0 -28px;
+      padding-left: 28px;
+      padding-right: 28px;
     }
 
     .field-label {
       font-size: 14px;
       color: var(--gray-medium);
-      font-weight: 600;
-      text-transform: uppercase;
+      font-weight: 500;
       letter-spacing: 0.5px;
     }
 
@@ -466,7 +475,7 @@
       padding: 12px;
       font-size: 13px;
       overflow-x: auto;
-      font-family: 'IBM Plex Mono', monospace;
+      font-family: 'Courier New', monospace;
     }
 
     /* Progress Bar */
@@ -487,17 +496,16 @@
     .tabs {
       display: flex;
       gap: 0;
-      border-bottom: 2px solid var(--brand-orange);
       margin-bottom: 32px;
+      background: var(--gray-lighter);
     }
 
     .tab {
       padding: 16px 24px;
       cursor: pointer;
       background: var(--gray-lighter);
-      font-weight: 600;
+      font-weight: 500;
       font-size: 14px;
-      text-transform: uppercase;
       letter-spacing: 0.5px;
       transition: all 0.2s;
       color: var(--brand-dark);
@@ -522,8 +530,7 @@
     }
 
     .warning-box strong {
-      font-weight: 700;
-      text-transform: uppercase;
+      font-weight: 500;
       letter-spacing: 0.5px;
     }
 
@@ -555,7 +562,6 @@
 
     .modal-header {
       padding: 28px 32px;
-      border-bottom: 2px solid var(--brand-orange);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -564,7 +570,7 @@
 
     .modal-title {
       font-size: 24px;
-      font-weight: 700;
+      font-weight: 500;
       color: var(--brand-dark);
     }
 
@@ -576,13 +582,12 @@
 
     .close-btn {
       background: var(--brand-orange);
-      border: none;
       width: 40px;
       height: 40px;
       cursor: pointer;
       font-size: 24px;
       color: var(--brand-dark);
-      font-weight: 700;
+      font-weight: 500;
       transition: all 0.2s;
     }
 
@@ -614,19 +619,20 @@
     /* Remove all remaining borders and rounded corners */
     * {
       border-radius: 0 !important;
+      border: none !important;
     }
 
     input:focus,
     select:focus,
     button:focus {
-      outline: 2px solid var(--brand-orange);
-      outline-offset: 2px;
+      outline: none;
+      box-shadow: 0 0 0 2px var(--brand-orange);
     }
 
-    /* Scrollbar styling */
+    /* Scrollbar styling - thinner */
     ::-webkit-scrollbar {
-      width: 12px;
-      height: 12px;
+      width: 6px;
+      height: 6px;
     }
 
     ::-webkit-scrollbar-track {
@@ -640,12 +646,56 @@
     ::-webkit-scrollbar-thumb:hover {
       background: var(--brand-dark);
     }
+
+    /* Custom Checkbox Styling */
+    input[type="checkbox"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      background: var(--white);
+      cursor: pointer;
+      position: relative;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+
+    input[type="checkbox"]:checked {
+      background: var(--brand-orange);
+    }
+
+    input[type="checkbox"]:checked::after {
+      content: '✓';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: var(--brand-dark);
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    input[type="checkbox"]:hover {
+      background: var(--gray-light);
+    }
+
+    input[type="checkbox"]:checked:hover {
+      background: var(--brand-dark);
+    }
+
+    input[type="checkbox"]:checked:hover::after {
+      color: var(--brand-orange);
+    }
   </style>
 </head>
 <body>
   <div class="sidebar">
     <div class="logo-container">
-      <div class="logo">CURE × FREND</div>
+      <div class="logo">
+        <img src="logos/cure-logo.svg" alt="Cure">
+        <span class="logo-divider">×</span>
+        <img src="logos/frend-logo.svg" alt="Frend">
+      </div>
     </div>
 
     <div class="nav-section">
@@ -678,7 +728,7 @@
       <div class="nav-label">Webflow</div>
       <div class="nav-item" onclick="showWebflow()">
         <span>Collections</span>
-        <span class="nav-badge" id="webflow-badge">NEW</span>
+        <span class="nav-badge" id="webflow-badge">New</span>
       </div>
       <div class="nav-item" onclick="showAIAnalysis()">
         <span>AI Analysis</span>
@@ -743,7 +793,7 @@
           <div class="empty-state">
             <h3>Welcome to Cure × Frend Migration Tool</h3>
             <p>Click "Refresh Data" to fetch content from Storyblok</p>
-            <button class="btn" onclick="runDiscovery()" style="margin-top: 24px;">FETCH DATA FROM STORYBLOK</button>
+            <button class="btn" onclick="runDiscovery()" style="margin-top: 24px;">Fetch data from Storyblok</button>
           </div>
         `;
       }
@@ -977,7 +1027,7 @@
         <div class="panel">
           <div class="panel-header">Discovery Progress</div>
           <div class="panel-body">
-            <div id="discovery-log" style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; background: var(--gray-lighter); padding: 20px; max-height: 400px; overflow-y: auto;">
+            <div id="discovery-log" style="font-family: 'Courier New', monospace; font-size: 14px; background: var(--white); padding: 20px; max-height: 400px; overflow-y: auto;">
               <div>Starting discovery...</div>
             </div>
             <div class="progress-bar" style="margin-top: 24px;">
