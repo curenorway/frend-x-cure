@@ -200,7 +200,7 @@
       <h1 class="login-title">Migration Tool Access</h1>
     </div>
 
-    <form class="login-form" id="loginForm">
+    <form class="login-form" id="loginForm" onsubmit="return false;">
       <div class="error-message" id="errorMessage">
         Invalid credentials. Please try again.
       </div>
@@ -258,58 +258,85 @@
         return;
       }
 
-      loginForm.addEventListener('submit', async (e) => {
+      loginForm.addEventListener('submit', function(e) {
+        // Prevent default immediately and multiple times to be sure
         e.preventDefault();
+        e.stopPropagation();
+
         console.log('[FORM] Form submit intercepted');
 
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-        const errorMsg = document.getElementById('errorMessage');
-        const loginBtn = document.getElementById('loginBtn');
-
-        // Show loading state
-        loginBtn.classList.add('loading');
-        loginBtn.disabled = true;
-        loginBtn.querySelector('.btn-text').textContent = 'Signing in...';
-        errorMsg.classList.remove('show');
-
+        // Wrap entire handler in try-catch to prevent any uncaught errors
         try {
-          console.log('[CLIENT] Sending login request with username:', username);
-          const response = await fetch('/api/login', {
+          const username = document.getElementById('username').value;
+          const password = document.getElementById('password').value;
+          const errorMsg = document.getElementById('errorMessage');
+          const loginBtn = document.getElementById('loginBtn');
+
+          console.log('[FORM] Got form values, username:', username);
+
+          // Show loading state
+          loginBtn.classList.add('loading');
+          loginBtn.disabled = true;
+          loginBtn.querySelector('.btn-text').textContent = 'Signing in...';
+          errorMsg.classList.remove('show');
+
+          // Store attempt in localStorage for debugging
+          localStorage.setItem('lastLoginAttempt', JSON.stringify({
+            time: new Date().toISOString(),
+            username: username,
+            stage: 'before-fetch'
+          }));
+
+          console.log('[CLIENT] About to send login request...');
+
+          // Make the async request
+          fetch('/api/login', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({ username, password })
-          });
+          })
+          .then(response => {
+            console.log('[CLIENT] Response received:', response.status);
+            localStorage.setItem('lastLoginResponse', response.status);
 
-          console.log('[CLIENT] Response status:', response.status);
-          console.log('[CLIENT] Response ok:', response.ok);
+            if (response.ok) {
+              console.log('[CLIENT] Login successful, redirecting...');
+              // Only redirect if truly successful
+              window.location.href = '/';
+            } else {
+              console.log('[CLIENT] Login failed with status:', response.status);
+              // Show error
+              errorMsg.classList.add('show');
+              loginBtn.classList.remove('loading');
+              loginBtn.disabled = false;
+              loginBtn.querySelector('.btn-text').textContent = 'Sign In';
+              document.getElementById('username').select();
+            }
+          })
+          .catch(error => {
+            // Network error
+            console.error('[CLIENT] Network error during login:', error);
+            localStorage.setItem('lastLoginError', error.toString());
 
-          if (response.ok) {
-            console.log('[CLIENT] Login successful, redirecting...');
-            // Login successful - redirect to main app
-            window.location.href = '/';
-          } else {
-            console.log('[CLIENT] Login failed');
-            // Show error
+            errorMsg.textContent = 'Connection error: ' + error.message;
             errorMsg.classList.add('show');
             loginBtn.classList.remove('loading');
             loginBtn.disabled = false;
             loginBtn.querySelector('.btn-text').textContent = 'Sign In';
+          });
 
-            // Focus username field
-            document.getElementById('username').select();
-          }
         } catch (error) {
-          // Network error
-          console.error('[CLIENT] Error during login:', error);
-          errorMsg.textContent = 'Connection error. Please try again.';
-          errorMsg.classList.add('show');
-          loginBtn.classList.remove('loading');
-          loginBtn.disabled = false;
-          loginBtn.querySelector('.btn-text').textContent = 'Sign In';
+          // Catch any synchronous errors
+          console.error('[FORM] Error in form handler:', error);
+          localStorage.setItem('formHandlerError', error.toString());
+          // Even if there's an error, prevent the form submission
+          e.preventDefault();
         }
+
+        // Return false as additional prevention
+        return false;
       });
 
       // Focus username field
