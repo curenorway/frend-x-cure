@@ -1510,12 +1510,61 @@
     }
 
     async function runDiscovery() {
-      if (!confirm('Run discovery? This will take ~30 seconds')) return;
+      // Show progress in the main content area
+      document.getElementById('main-content').innerHTML = `
+        <div class="page-header">
+          <div class="page-title">Fetching Data from Storyblok</div>
+          <div class="page-subtitle">Connecting directly to Storyblok API...</div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">Discovery Progress</div>
+          <div class="panel-body">
+            <div id="discovery-log" style="font-family: monospace; font-size: 12px; background: #f8f8f8; padding: 16px; border-radius: 4px; max-height: 400px; overflow-y: auto;">
+              <div>Starting discovery...</div>
+            </div>
+            <div class="progress-bar" style="margin-top: 16px;">
+              <div class="progress-fill" style="width: 0%; transition: width 0.3s;"></div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      const logDiv = document.getElementById('discovery-log');
+      let progress = 0;
+
+      // Connect to WebSocket for real-time updates
+      if (window.ws) {
+        window.ws.onmessage = (event) => {
+          const data = JSON.parse(event.data);
+          if (data.type === 'discovery-output') {
+            logDiv.innerHTML += `<div>${data.message}</div>`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+
+            // Update progress bar
+            if (data.current) {
+              progress = Math.min(95, progress + 10);
+              document.querySelector('.progress-fill').style.width = progress + '%';
+            }
+          } else if (data.type === 'discovery-complete') {
+            document.querySelector('.progress-fill').style.width = '100%';
+            logDiv.innerHTML += `<div style="color: #0a0; font-weight: bold;">✓ Discovery complete!</div>`;
+            setTimeout(() => location.reload(), 1500);
+          } else if (data.type === 'discovery-error') {
+            logDiv.innerHTML += `<div style="color: #f00;">Error: ${data.error}</div>`;
+          }
+        };
+      }
+
       try {
-        await fetch('/api/run-discovery', { method: 'POST' });
-        setTimeout(() => location.reload(), 2000);
+        const res = await fetch('/api/run-discovery', { method: 'POST' });
+        const result = await res.json();
+
+        if (!res.ok) {
+          throw new Error(result.error || 'Discovery failed');
+        }
       } catch (e) {
-        alert(`Error: ${e.message}`);
+        logDiv.innerHTML += `<div style="color: #f00;">Error: ${e.message}</div>`;
       }
     }
 
@@ -1544,7 +1593,32 @@
       if (e.target.id === 'modal') closeModal();
     });
 
-    // Initialize
+    // Setup WebSocket connection for real-time updates
+    function setupWebSocket() {
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      const ws = new WebSocket(`${protocol}//${window.location.host}`);
+
+      ws.onopen = () => {
+        console.log('WebSocket connected');
+      };
+
+      ws.onerror = (error) => {
+        console.error('WebSocket error:', error);
+      };
+
+      ws.onclose = () => {
+        console.log('WebSocket disconnected');
+        // Reconnect after 3 seconds
+        setTimeout(setupWebSocket, 3000);
+      };
+
+      window.ws = ws;
+    }
+
+    // Initialize WebSocket
+    setupWebSocket();
+
+    // Initialize app
     init();
   </script>
 </body>

@@ -8,7 +8,6 @@
 import express from 'express';
 import { WebSocketServer } from 'ws';
 import { createServer } from 'http';
-import { spawn } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -19,6 +18,7 @@ import { transformArticles } from './transformers/articles.js';
 import { transformNews } from './transformers/news.js';
 import { createWebflowClient, mapToWebflowFields } from './integrations/webflow.js';
 import { createAIGenerator } from './integrations/ai-collection-generator.js';
+import { createStoryblokFetcher } from './storyblok-fetcher.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -100,43 +100,66 @@ app.get('/api/transformed/:type', (req, res) => {
   }
 });
 
-// API: Run discovery
-app.post('/api/run-discovery', (req, res) => {
-  broadcast({ type: 'discovery-start' });
+// API: Run discovery - Direct Storyblok API fetch
+app.post('/api/run-discovery', async (req, res) => {
+  try {
+    broadcast({ type: 'discovery-start', message: 'Starting Storyblok discovery...' });
 
-  const discovery = spawn('npm', ['run', 'discover'], {
-    cwd: path.join(__dirname, '..'),
-    shell: true
-  });
+    const fetcher = createStoryblokFetcher();
 
-  let output = '';
+    // Progress callback to send updates via WebSocket
+    const progressCallback = (progress) => {
+      broadcast({
+        type: 'discovery-output',
+        message: progress.message,
+        ...progress
+      });
+    };
 
-  discovery.stdout.on('data', (data) => {
-    const message = data.toString();
-    output += message;
-    broadcast({ type: 'discovery-output', message: message.trim() });
-  });
+    // Run discovery with progress updates
+    const report = await fetcher.runDiscovery(progressCallback);
 
-  discovery.stderr.on('data', (data) => {
-    const message = data.toString();
-    output += message;
-    broadcast({ type: 'discovery-output', message: message.trim() });
-  });
+    broadcast({
+      type: 'discovery-complete',
+      message: 'Discovery complete!',
+      report
+    });
 
-  discovery.on('close', (code) => {
-    if (code === 0) {
-      broadcast({ type: 'discovery-complete' });
-      res.json({ success: true, output });
-    } else {
-      broadcast({ type: 'discovery-error', error: 'Discovery failed' });
-      res.status(500).json({ success: false, error: 'Discovery failed', output });
-    }
-  });
+    // Log operation
+    operationLog.push({
+      timestamp: new Date().toISOString(),
+      type: 'discovery',
+      success: true,
+      stories: report.stories.total,
+      components: report.components.total,
+      assets: report.assets.total
+    });
 
-  discovery.on('error', (error) => {
-    broadcast({ type: 'discovery-error', error: error.message });
-    res.status(500).json({ success: false, error: error.message });
-  });
+    res.json({
+      success: true,
+      report,
+      message: `Found ${report.stories.total} stories, ${report.components.total} components, ${report.assets.total} assets`
+    });
+
+  } catch (error) {
+    console.error('Discovery error:', error);
+    broadcast({
+      type: 'discovery-error',
+      error: error.message
+    });
+
+    operationLog.push({
+      timestamp: new Date().toISOString(),
+      type: 'discovery',
+      success: false,
+      error: error.message
+    });
+
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
 });
 
 // API: Get available transformers
