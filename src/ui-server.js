@@ -32,7 +32,7 @@ const wss = new WebSocketServer({ server });
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3456;
 
 // Session configuration
 app.use(session({
@@ -916,7 +916,7 @@ server.listen(PORT, async () => {
     await open(`http://localhost:${PORT}`);
   } catch (error) {
     // If open fails, just continue - user can open manually
-    console.log('  (Open http://localhost:3000 in your browser)\n');
+    console.log(`  (Open http://localhost:${PORT} in your browser)\n`);
   }
 });
 
