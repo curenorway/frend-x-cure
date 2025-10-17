@@ -4,6 +4,7 @@
   "description": "Migration tool for Storyblok to Webflow CMS",
   "type": "module",
   "scripts": {
+    "start": "node src/ui-server.js",
     "discover": "node src/discover.js",
     "test-transform": "node src/test-transform.js",
     "migrate": "node src/migrate.js",

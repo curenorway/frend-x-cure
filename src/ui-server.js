@@ -23,7 +23,7 @@ const wss = new WebSocketServer({ server });
 
 app.use(express.json());
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Store active connections
 const clients = new Set();
