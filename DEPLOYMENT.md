@@ -31,9 +31,13 @@ In Railway dashboard:
 1. Click your project
 2. Go to "Variables" tab
 3. Add these:
+   - `AUTH_USERNAME` = admin (or your preferred username)
+   - `AUTH_PASSWORD` = YourSecurePassword123! (use a strong password)
    - `STORYBLOK_TOKEN` = your token
    - `STORYBLOK_SPACE_ID` = 139140
    - `NODE_ENV` = production
+
+**Security Note:** The AUTH_USERNAME and AUTH_PASSWORD protect your dashboard with HTTP Basic Authentication. Anyone accessing the dashboard will need to enter these credentials.
 
 ### Step 4: Access Your App
 
@@ -90,6 +94,11 @@ flyctl deploy
 For ANY deployment, you need:
 
 ```env
+# Authentication (Required for production)
+AUTH_USERNAME=admin
+AUTH_PASSWORD=your_secure_password_here
+
+# Storyblok
 STORYBLOK_TOKEN=your_personal_access_token
 STORYBLOK_SPACE_ID=139140
 

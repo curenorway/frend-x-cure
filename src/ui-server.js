@@ -25,6 +25,38 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
 
+// HTTP Basic Authentication middleware
+const basicAuth = (req, res, next) => {
+  // Skip auth if credentials are not set (for local development)
+  const authUsername = process.env.AUTH_USERNAME;
+  const authPassword = process.env.AUTH_PASSWORD;
+
+  if (!authUsername || !authPassword) {
+    return next();
+  }
+
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith('Basic ')) {
+    res.setHeader('WWW-Authenticate', 'Basic realm="Migration Dashboard"');
+    return res.status(401).send('Authentication required');
+  }
+
+  const base64Credentials = authHeader.split(' ')[1];
+  const credentials = Buffer.from(base64Credentials, 'base64').toString('utf-8');
+  const [username, password] = credentials.split(':');
+
+  if (username === authUsername && password === authPassword) {
+    return next();
+  }
+
+  res.setHeader('WWW-Authenticate', 'Basic realm="Migration Dashboard"');
+  return res.status(401).send('Invalid credentials');
+};
+
+// Apply auth to all routes
+app.use(basicAuth);
+
 // Store active connections
 const clients = new Set();
 
