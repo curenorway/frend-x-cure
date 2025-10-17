@@ -13,6 +13,10 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { transformTeamMembers } from './transformers/team-members.js';
+import { transformVideos } from './transformers/videos.js';
+import { transformProjects } from './transformers/projects.js';
+import { transformArticles } from './transformers/articles.js';
+import { transformNews } from './transformers/news.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -266,11 +270,40 @@ app.post('/api/transform-single', async (req, res) => {
     }
 
     let result;
-    if (story.content_type === 'Person') {
-      const results = transformTeamMembers([story]);
-      result = results.items[0];
-    } else {
-      return res.status(400).json({ error: 'Transformer not available for this type' });
+    let results;
+
+    switch (story.content_type) {
+      case 'Person':
+        results = transformTeamMembers([story]);
+        result = results.items[0];
+        break;
+
+      case 'Video':
+        results = transformVideos([story]);
+        result = results.items[0];
+        break;
+
+      case 'project':
+        results = transformProjects([story]);
+        result = results.items[0];
+        break;
+
+      case 'Article':
+        results = transformArticles([story]);
+        result = results.items[0];
+        break;
+
+      case 'News':
+        results = transformNews([story]);
+        result = results.items[0];
+        break;
+
+      default:
+        return res.status(400).json({
+          error: 'Transformer not available for this type',
+          contentType: story.content_type,
+          availableTypes: ['Person', 'Video', 'project', 'Article', 'News']
+        });
     }
 
     // Log operation
@@ -332,15 +365,33 @@ app.post('/api/transform-bulk', async (req, res) => {
       });
 
       try {
-        if (type === 'Person') {
-          const transformed = transformTeamMembers(stories);
-          results.successful += transformed.successful;
-          results.failed += transformed.failed;
-          results.byType[type] = transformed;
-        } else {
-          results.failed += stories.length;
-          results.byType[type] = { error: 'No transformer available' };
+        let transformed;
+
+        switch (type) {
+          case 'Person':
+            transformed = transformTeamMembers(stories);
+            break;
+          case 'Video':
+            transformed = transformVideos(stories);
+            break;
+          case 'project':
+            transformed = transformProjects(stories);
+            break;
+          case 'Article':
+            transformed = transformArticles(stories);
+            break;
+          case 'News':
+            transformed = transformNews(stories);
+            break;
+          default:
+            results.failed += stories.length;
+            results.byType[type] = { error: 'No transformer available' };
+            continue;
         }
+
+        results.successful += transformed.successful;
+        results.failed += transformed.failed;
+        results.byType[type] = transformed;
       } catch (error) {
         results.failed += stories.length;
         results.byType[type] = { error: error.message };
@@ -376,43 +427,75 @@ app.post('/api/transform/:type', async (req, res) => {
   try {
     let results;
 
+    const allStories = JSON.parse(
+      fs.readFileSync('./reports/raw-stories.json', 'utf-8')
+    );
+
+    let filteredStories;
+    let transformer;
+    let outputFilename;
+
     switch (type) {
-      case 'team-members': {
-        const allStories = JSON.parse(
-          fs.readFileSync('./reports/raw-stories.json', 'utf-8')
-        );
-        const personStories = allStories.filter(s => s.content_type === 'Person');
-
-        broadcast({
-          type: 'transform-progress',
-          contentType: type,
-          current: 0,
-          total: personStories.length,
-          percentage: 0
-        });
-
-        // Transform with progress updates
-        results = transformTeamMembers(personStories);
-
-        broadcast({
-          type: 'transform-progress',
-          contentType: type,
-          current: personStories.length,
-          total: personStories.length,
-          percentage: 100
-        });
-
-        // Save results
-        const outputPath = './output/transformed/team-members.json';
-        fs.mkdirSync(path.dirname(outputPath), { recursive: true });
-        fs.writeFileSync(outputPath, JSON.stringify(results, null, 2));
-
+      case 'team-members':
+        filteredStories = allStories.filter(s => s.content_type === 'Person');
+        transformer = transformTeamMembers;
+        outputFilename = 'team-members.json';
         break;
-      }
+
+      case 'videos':
+        filteredStories = allStories.filter(s => s.content_type === 'Video');
+        transformer = transformVideos;
+        outputFilename = 'videos.json';
+        break;
+
+      case 'projects':
+        filteredStories = allStories.filter(s => s.content_type === 'project');
+        transformer = transformProjects;
+        outputFilename = 'projects.json';
+        break;
+
+      case 'articles':
+        filteredStories = allStories.filter(s => s.content_type === 'Article');
+        transformer = transformArticles;
+        outputFilename = 'articles.json';
+        break;
+
+      case 'news':
+        filteredStories = allStories.filter(s => s.content_type === 'News');
+        transformer = transformNews;
+        outputFilename = 'news.json';
+        break;
 
       default:
-        return res.status(400).json({ error: `Unknown content type: ${type}` });
+        return res.status(400).json({
+          error: `Unknown content type: ${type}`,
+          availableTypes: ['team-members', 'videos', 'projects', 'articles', 'news']
+        });
     }
+
+    broadcast({
+      type: 'transform-progress',
+      contentType: type,
+      current: 0,
+      total: filteredStories.length,
+      percentage: 0
+    });
+
+    // Transform with progress updates
+    results = transformer(filteredStories);
+
+    broadcast({
+      type: 'transform-progress',
+      contentType: type,
+      current: filteredStories.length,
+      total: filteredStories.length,
+      percentage: 100
+    });
+
+    // Save results
+    const outputPath = `./output/transformed/${outputFilename}`;
+    fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+    fs.writeFileSync(outputPath, JSON.stringify(results, null, 2));
 
     broadcast({
       type: 'transform-complete',
