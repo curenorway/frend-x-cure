@@ -200,7 +200,7 @@
       <h1 class="login-title">Migration Tool Access</h1>
     </div>
 
-    <form class="login-form" id="loginForm">
+    <form class="login-form" id="loginForm" onsubmit="event.preventDefault(); event.stopPropagation(); console.log('Inline prevention!'); return false;">
       <div class="error-message" id="errorMessage">
         Invalid credentials. Please try again.
       </div>
@@ -246,24 +246,42 @@
     // Immediate test to verify script runs
     (function() {
       console.log('[INIT] Login script loaded - immediate');
+
+      // Try to attach listener immediately if form exists
+      var form = document.getElementById('loginForm');
+      if (form) {
+        console.log('[INIT] Form found immediately, attaching handler');
+        attachFormHandler(form);
+      }
     })();
 
-    // Wait for DOM to be ready
-    document.addEventListener('DOMContentLoaded', function() {
-      console.log('[INIT] DOM ready, attaching event listener');
-
-      const loginForm = document.getElementById('loginForm');
+    // Function to attach the handler
+    function attachFormHandler(loginForm) {
       if (!loginForm) {
         console.error('[INIT] Login form not found!');
         return;
       }
 
-      loginForm.addEventListener('submit', function(e) {
-        // Prevent default immediately and multiple times to be sure
-        e.preventDefault();
-        e.stopPropagation();
+      // Mark that we've attached the handler
+      loginForm.setAttribute('data-handler-attached', 'true');
 
-        console.log('[FORM] Form submit intercepted');
+      loginForm.addEventListener('submit', function(e) {
+        // ABSOLUTELY PREVENT SUBMISSION - DO THIS FIRST!
+        if (e && e.preventDefault) {
+          e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+        }
+
+        // Store that we intercepted
+        localStorage.setItem('formIntercepted', 'true');
+        console.log('[FORM] Form submit intercepted - preventDefault called');
+
+        // Double-check prevention worked
+        if (e.defaultPrevented !== true) {
+          console.error('[FORM] WARNING: preventDefault may not have worked!');
+          return false;
+        }
 
         // Wrap entire handler in try-catch to prevent any uncaught errors
         try {
@@ -354,8 +372,23 @@
         return false;
       });
 
-      // Focus username field
-      document.getElementById('username').focus();
+      // Try to focus username field
+      try {
+        document.getElementById('username').focus();
+      } catch(e) {
+        // Ignore focus errors
+      }
+    }
+
+    // Also attach on DOMContentLoaded as backup
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('[INIT] DOM ready, checking if handler needed');
+      var form = document.getElementById('loginForm');
+      if (form && !form.hasAttribute('data-handler-attached')) {
+        console.log('[INIT] Attaching handler via DOMContentLoaded');
+        form.setAttribute('data-handler-attached', 'true');
+        attachFormHandler(form);
+      }
     });
   </script>
 </body>
