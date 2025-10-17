@@ -200,7 +200,7 @@
       <h1 class="login-title">Migration Tool Access</h1>
     </div>
 
-    <form class="login-form" id="loginForm" onsubmit="return false;">
+    <form class="login-form" id="loginForm">
       <div class="error-message" id="errorMessage">
         Invalid credentials. Please try again.
       </div>
@@ -302,9 +302,24 @@
             localStorage.setItem('lastLoginResponse', response.status);
 
             if (response.ok) {
-              console.log('[CLIENT] Login successful, redirecting...');
-              // Only redirect if truly successful
-              window.location.href = '/';
+              console.log('[CLIENT] Login successful, parsing response...');
+              return response.json().then(data => {
+                console.log('[CLIENT] Response data:', data);
+                if (data.success) {
+                  console.log('[CLIENT] Success confirmed, redirecting NOW...');
+                  // Force redirect with replace to avoid back button issues
+                  window.location.replace('/');
+                  // Backup redirect methods
+                  window.location.href = '/';
+                  window.location = '/';
+                  // If still here after 100ms, try harder
+                  setTimeout(() => {
+                    window.location.reload();
+                  }, 100);
+                } else {
+                  throw new Error('Login response was not successful');
+                }
+              });
             } else {
               console.log('[CLIENT] Login failed with status:', response.status);
               // Show error
