@@ -142,32 +142,11 @@
       background: var(--white);
       padding: 20px 32px;
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       align-items: center;
       position: sticky;
       top: 0;
       z-index: 50;
-    }
-
-    .search-box {
-      display: flex;
-      align-items: center;
-      background: var(--gray-light);
-      padding: 12px 20px;
-      width: 480px;
-    }
-
-    .search-box input {
-      background: none;
-      outline: none;
-      width: 100%;
-      font-size: 15px;
-      font-family: 'SuisseIntl', sans-serif;
-      color: var(--brand-dark);
-    }
-
-    .search-box input::placeholder {
-      color: var(--gray-medium);
     }
 
     .toolbar {
@@ -275,18 +254,6 @@
       background: var(--gray-lighter);
       padding: 28px;
       position: relative;
-      transition: all 0.2s;
-    }
-
-    .stat-card:hover {
-      background: var(--brand-orange);
-      cursor: pointer;
-    }
-
-    .stat-card:hover .stat-value,
-    .stat-card:hover .stat-label,
-    .stat-card:hover .stat-change {
-      color: var(--brand-dark);
     }
 
     .stat-value {
@@ -755,9 +722,6 @@
 
   <div class="main">
     <div class="topbar">
-      <div class="search-box">
-        <input type="text" placeholder="Search content..." id="global-search" oninput="handleSearch(this.value)">
-      </div>
       <div class="toolbar">
         <button class="btn btn-secondary" onclick="runDiscovery()">Refresh Data</button>
         <button class="btn" onclick="bulkTransform()">Transform Selected</button>
@@ -788,7 +752,7 @@
     let transformedData = {};
     let selectedItems = new Set();
     let currentFilter = 'all';
-    let searchQuery = '';
+    let lastSelectedId = null; // For shift-click selection
 
     async function init() {
       try {
@@ -1005,7 +969,7 @@
                   <td class="row-checkbox">
                     <input type="checkbox"
                       ${selectedItems.has(item.id) ? 'checked' : ''}
-                      onchange="toggleSelection(${item.id}, this.checked)">
+                      onchange="toggleSelection(${item.id}, this.checked, event)">
                   </td>
                   <td>
                     <div class="item-name">${item.name}</div>
@@ -1173,13 +1137,6 @@
     function filterItems(items) {
       let filtered = items;
 
-      if (searchQuery) {
-        filtered = filtered.filter(item =>
-          item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          item.slug.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-      }
-
       if (currentFilter === 'published') {
         filtered = filtered.filter(item => item.published_at);
       } else if (currentFilter === 'draft') {
@@ -1189,20 +1146,42 @@
       return filtered;
     }
 
-    function handleSearch(query) {
-      searchQuery = query;
-    }
-
     function filterByStatus(status, type) {
       currentFilter = status;
       showCollection(type);
     }
 
-    function toggleSelection(itemId, checked) {
-      if (checked) {
-        selectedItems.add(itemId);
+    function toggleSelection(itemId, checked, event) {
+      const currentType = rawStories.find(s => s.id === itemId)?.content_type;
+
+      // Handle shift-click for range selection
+      if (event && event.shiftKey && lastSelectedId !== null && checked) {
+        const items = rawStories.filter(s => s.content_type === currentType);
+        const startIndex = items.findIndex(item => item.id === lastSelectedId);
+        const endIndex = items.findIndex(item => item.id === itemId);
+
+        if (startIndex !== -1 && endIndex !== -1) {
+          const minIndex = Math.min(startIndex, endIndex);
+          const maxIndex = Math.max(startIndex, endIndex);
+
+          for (let i = minIndex; i <= maxIndex; i++) {
+            selectedItems.add(items[i].id);
+          }
+        }
       } else {
-        selectedItems.delete(itemId);
+        // Regular click
+        if (checked) {
+          selectedItems.add(itemId);
+        } else {
+          selectedItems.delete(itemId);
+        }
+      }
+
+      lastSelectedId = checked ? itemId : null;
+
+      // Refresh the view to update selection display
+      if (currentType) {
+        showCollection(currentType);
       }
     }
 
@@ -1220,6 +1199,12 @@
 
     function clearSelection() {
       selectedItems.clear();
+      lastSelectedId = null;
+      // Get current type from the active nav item
+      const activeNav = document.querySelector('.nav-item.active');
+      if (activeNav && activeNav.textContent.trim() !== 'Dashboard') {
+        showCollection(activeNav.textContent.trim().split(/\s+/)[0]);
+      }
     }
 
     async function transformCollection(type) {
