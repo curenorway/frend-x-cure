@@ -72,21 +72,30 @@ const requireAuth = (req, res, next) => {
 
 // Login endpoint
 app.post('/api/login', (req, res) => {
+  console.log('[LOGIN] Login attempt received');
   const { username, password } = req.body;
   const authUsername = process.env.AUTH_USERNAME;
   const authPassword = process.env.AUTH_PASSWORD;
 
+  console.log('[LOGIN] Checking credentials:');
+  console.log('[LOGIN] - Provided username:', username);
+  console.log('[LOGIN] - Expected username:', authUsername);
+  console.log('[LOGIN] - Auth configured:', !!authUsername && !!authPassword);
+
   // If auth is not configured, allow access
   if (!authUsername || !authPassword) {
+    console.log('[LOGIN] No auth configured, allowing access');
     req.session.authenticated = true;
     return res.json({ success: true });
   }
 
   // Check credentials
   if (username === authUsername && password === authPassword) {
+    console.log('[LOGIN] Credentials valid! Setting session...');
     req.session.authenticated = true;
     res.json({ success: true });
   } else {
+    console.log('[LOGIN] Invalid credentials');
     res.status(401).json({ error: 'Invalid credentials' });
   }
 });

@@ -243,54 +243,76 @@
   </div>
 
   <script>
-    document.getElementById('loginForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
+    // Immediate test to verify script runs
+    (function() {
+      console.log('[INIT] Login script loaded - immediate');
+    })();
 
-      const username = document.getElementById('username').value;
-      const password = document.getElementById('password').value;
-      const errorMsg = document.getElementById('errorMessage');
-      const loginBtn = document.getElementById('loginBtn');
+    // Wait for DOM to be ready
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('[INIT] DOM ready, attaching event listener');
 
-      // Show loading state
-      loginBtn.classList.add('loading');
-      loginBtn.disabled = true;
-      loginBtn.querySelector('.btn-text').textContent = 'Signing in...';
-      errorMsg.classList.remove('show');
+      const loginForm = document.getElementById('loginForm');
+      if (!loginForm) {
+        console.error('[INIT] Login form not found!');
+        return;
+      }
 
-      try {
-        const response = await fetch('/api/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ username, password })
-        });
+      loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        console.log('[FORM] Form submit intercepted');
 
-        if (response.ok) {
-          // Login successful - redirect to main app
-          window.location.href = '/';
-        } else {
-          // Show error
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const errorMsg = document.getElementById('errorMessage');
+        const loginBtn = document.getElementById('loginBtn');
+
+        // Show loading state
+        loginBtn.classList.add('loading');
+        loginBtn.disabled = true;
+        loginBtn.querySelector('.btn-text').textContent = 'Signing in...';
+        errorMsg.classList.remove('show');
+
+        try {
+          console.log('[CLIENT] Sending login request with username:', username);
+          const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password })
+          });
+
+          console.log('[CLIENT] Response status:', response.status);
+          console.log('[CLIENT] Response ok:', response.ok);
+
+          if (response.ok) {
+            console.log('[CLIENT] Login successful, redirecting...');
+            // Login successful - redirect to main app
+            window.location.href = '/';
+          } else {
+            console.log('[CLIENT] Login failed');
+            // Show error
+            errorMsg.classList.add('show');
+            loginBtn.classList.remove('loading');
+            loginBtn.disabled = false;
+            loginBtn.querySelector('.btn-text').textContent = 'Sign In';
+
+            // Focus username field
+            document.getElementById('username').select();
+          }
+        } catch (error) {
+          // Network error
+          console.error('[CLIENT] Error during login:', error);
+          errorMsg.textContent = 'Connection error. Please try again.';
           errorMsg.classList.add('show');
           loginBtn.classList.remove('loading');
           loginBtn.disabled = false;
           loginBtn.querySelector('.btn-text').textContent = 'Sign In';
-
-          // Focus username field
-          document.getElementById('username').select();
         }
-      } catch (error) {
-        // Network error
-        errorMsg.textContent = 'Connection error. Please try again.';
-        errorMsg.classList.add('show');
-        loginBtn.classList.remove('loading');
-        loginBtn.disabled = false;
-        loginBtn.querySelector('.btn-text').textContent = 'Sign In';
-      }
-    });
+      });
 
-    // Focus username field on load
-    window.addEventListener('load', () => {
+      // Focus username field
       document.getElementById('username').focus();
     });
   </script>
