@@ -200,7 +200,7 @@
       <h1 class="login-title">Migration Tool Access</h1>
     </div>
 
-    <form class="login-form" id="loginForm">
+    <div class="login-form" id="loginForm">
       <div class="error-message" id="errorMessage">
         Invalid credentials. Please try again.
       </div>
@@ -213,8 +213,8 @@
           name="username"
           class="form-input"
           placeholder="Enter username"
-          required
           autocomplete="username"
+          onkeypress="if(event.key==='Enter'){handleLogin(event); return false;}"
         >
       </div>
 
@@ -226,8 +226,8 @@
           name="password"
           class="form-input"
           placeholder="Enter password"
-          required
           autocomplete="current-password"
+          onkeypress="if(event.key==='Enter'){handleLogin(event); return false;}"
         >
       </div>
 
@@ -235,7 +235,7 @@
         <span class="spinner"></span>
         <span class="btn-text">Sign In</span>
       </button>
-    </form>
+    </div>
 
     <div class="login-footer">
       Secure access to Storyblok → Webflow migration
@@ -243,31 +243,45 @@
   </div>
 
   <script>
-    // Global handler for button click
-    function handleLogin(event) {
-      console.log('[BUTTON] Login button clicked');
+    // THERE IS NO FORM - ONLY A DIV - IT CANNOT SUBMIT!
+    console.log('[INIT] No form exists - using div container');
 
-      // Prevent any default behavior
+    // Global handler for button click and Enter key
+    function handleLogin(event) {
+      console.log('[LOGIN] handleLogin called');
+
+      // Stop everything
       if (event) {
         event.preventDefault();
         event.stopPropagation();
+        event.stopImmediatePropagation();
       }
 
-      // Get form values
+      // Clear old localStorage
+      localStorage.removeItem('loginSuccess');
+      localStorage.removeItem('responseData');
+      localStorage.removeItem('redirectAttempted');
+
+      // Get values
       const username = document.getElementById('username').value;
       const password = document.getElementById('password').value;
       const errorMsg = document.getElementById('errorMessage');
       const loginBtn = document.getElementById('loginBtn');
 
-      console.log('[BUTTON] Username:', username);
+      console.log('[LOGIN] Username:', username);
+      localStorage.setItem('attemptedLogin', JSON.stringify({
+        time: new Date().toISOString(),
+        username: username
+      }));
 
-      // Show loading state
+      // Show loading
       loginBtn.classList.add('loading');
       loginBtn.disabled = true;
       loginBtn.querySelector('.btn-text').textContent = 'Signing in...';
       errorMsg.classList.remove('show');
 
-      // Make the request
+      // Make request
+      console.log('[LOGIN] Making fetch request...');
       fetch('/api/login', {
         method: 'POST',
         headers: {
@@ -276,20 +290,71 @@
         body: JSON.stringify({ username, password })
       })
       .then(response => {
-        console.log('[BUTTON] Response:', response.status);
+        console.log('[LOGIN] Got response:', response.status);
+        console.log('[LOGIN] Response headers:', response.headers);
+        localStorage.setItem('gotResponse', response.status);
+        localStorage.setItem('responseOk', response.ok);
+
         if (response.ok) {
-          return response.json();
+          // Clone response to debug it
+          const clonedResponse = response.clone();
+          return clonedResponse.text().then(text => {
+            console.log('[LOGIN] Raw response text:', text);
+            localStorage.setItem('rawResponseText', text);
+
+            try {
+              const parsed = JSON.parse(text);
+              console.log('[LOGIN] Parsed JSON:', parsed);
+              return parsed;
+            } catch (e) {
+              console.error('[LOGIN] JSON parse error:', e);
+              localStorage.setItem('jsonParseError', e.toString());
+              throw new Error('Invalid JSON response');
+            }
+          });
         } else {
           throw new Error('Invalid credentials');
         }
       })
       .then(data => {
-        console.log('[BUTTON] Login successful, redirecting...');
-        // Simple redirect
-        window.location.href = '/';
+        console.log('[LOGIN] Response data received:', data);
+        console.log('[LOGIN] Type of data:', typeof data);
+        console.log('[LOGIN] data.success value:', data.success);
+        console.log('[LOGIN] data.success === true:', data.success === true);
+
+        localStorage.setItem('responseData', JSON.stringify(data));
+        localStorage.setItem('dataSuccess', data.success);
+        localStorage.setItem('dataSuccessType', typeof data.success);
+
+        if (data.success) {
+          console.log('[LOGIN] SUCCESS CONDITION MET - Starting redirect...');
+          localStorage.setItem('redirectStarted', new Date().toISOString());
+
+          // Log before each redirect attempt
+          console.log('[LOGIN] Attempting window.location.href = "/"');
+          window.location.href = '/';
+
+          console.log('[LOGIN] Attempting window.location.replace("/")');
+          window.location.replace('/');
+
+          console.log('[LOGIN] Attempting window.location.assign("/")');
+          window.location.assign('/');
+
+          // If still here after 100ms, force reload
+          setTimeout(() => {
+            console.log('[LOGIN] Still here after 100ms, forcing reload');
+            localStorage.setItem('forcedReload', 'true');
+            window.location.reload();
+          }, 100);
+        } else {
+          console.log('[LOGIN] SUCCESS CONDITION NOT MET');
+          console.log('[LOGIN] Full data object:', JSON.stringify(data));
+          localStorage.setItem('successConditionNotMet', JSON.stringify(data));
+        }
       })
       .catch(error => {
-        console.error('[BUTTON] Login error:', error);
+        console.error('[LOGIN] Error:', error);
+        localStorage.setItem('loginError', error.toString());
         errorMsg.textContent = error.message || 'Login failed';
         errorMsg.classList.add('show');
         loginBtn.classList.remove('loading');
@@ -300,150 +365,10 @@
       return false;
     }
 
-    // Immediate test to verify script runs
-    (function() {
-      console.log('[INIT] Login script loaded - immediate');
-
-      // Try to attach listener immediately if form exists
-      var form = document.getElementById('loginForm');
-      if (form) {
-        console.log('[INIT] Form found immediately, attaching handler');
-        attachFormHandler(form);
-      }
-    })();
-
-    // Function to attach the handler
-    function attachFormHandler(loginForm) {
-      if (!loginForm) {
-        console.error('[INIT] Login form not found!');
-        return;
-      }
-
-      // Mark that we've attached the handler
-      loginForm.setAttribute('data-handler-attached', 'true');
-
-      loginForm.addEventListener('submit', function(e) {
-        // ABSOLUTELY PREVENT SUBMISSION - DO THIS FIRST!
-        if (e && e.preventDefault) {
-          e.preventDefault();
-          e.stopPropagation();
-          e.stopImmediatePropagation();
-        }
-
-        // Store that we intercepted
-        localStorage.setItem('formIntercepted', 'true');
-        console.log('[FORM] Form submit intercepted - preventDefault called');
-
-        // Double-check prevention worked
-        if (e.defaultPrevented !== true) {
-          console.error('[FORM] WARNING: preventDefault may not have worked!');
-          return false;
-        }
-
-        // Wrap entire handler in try-catch to prevent any uncaught errors
-        try {
-          const username = document.getElementById('username').value;
-          const password = document.getElementById('password').value;
-          const errorMsg = document.getElementById('errorMessage');
-          const loginBtn = document.getElementById('loginBtn');
-
-          console.log('[FORM] Got form values, username:', username);
-
-          // Show loading state
-          loginBtn.classList.add('loading');
-          loginBtn.disabled = true;
-          loginBtn.querySelector('.btn-text').textContent = 'Signing in...';
-          errorMsg.classList.remove('show');
-
-          // Store attempt in localStorage for debugging
-          localStorage.setItem('lastLoginAttempt', JSON.stringify({
-            time: new Date().toISOString(),
-            username: username,
-            stage: 'before-fetch'
-          }));
-
-          console.log('[CLIENT] About to send login request...');
-
-          // Make the async request
-          fetch('/api/login', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ username, password })
-          })
-          .then(response => {
-            console.log('[CLIENT] Response received:', response.status);
-            localStorage.setItem('lastLoginResponse', response.status);
-
-            if (response.ok) {
-              console.log('[CLIENT] Login successful, parsing response...');
-              localStorage.setItem('loginSuccess', 'true');
-              return response.json().then(data => {
-                console.log('[CLIENT] Response data:', data);
-                localStorage.setItem('responseData', JSON.stringify(data));
-                if (data.success) {
-                  console.log('[CLIENT] Success confirmed, redirecting NOW...');
-                  localStorage.setItem('redirectAttempted', new Date().toISOString());
-                  // Try absolute URL redirect
-                  const currentHost = window.location.protocol + '//' + window.location.host;
-                  console.log('[CLIENT] Redirecting to:', currentHost + '/');
-                  window.location.href = currentHost + '/';
-                } else {
-                  throw new Error('Login response was not successful');
-                }
-              });
-            } else {
-              console.log('[CLIENT] Login failed with status:', response.status);
-              // Show error
-              errorMsg.classList.add('show');
-              loginBtn.classList.remove('loading');
-              loginBtn.disabled = false;
-              loginBtn.querySelector('.btn-text').textContent = 'Sign In';
-              document.getElementById('username').select();
-            }
-          })
-          .catch(error => {
-            // Network error
-            console.error('[CLIENT] Network error during login:', error);
-            localStorage.setItem('lastLoginError', error.toString());
-
-            errorMsg.textContent = 'Connection error: ' + error.message;
-            errorMsg.classList.add('show');
-            loginBtn.classList.remove('loading');
-            loginBtn.disabled = false;
-            loginBtn.querySelector('.btn-text').textContent = 'Sign In';
-          });
-
-        } catch (error) {
-          // Catch any synchronous errors
-          console.error('[FORM] Error in form handler:', error);
-          localStorage.setItem('formHandlerError', error.toString());
-          // Even if there's an error, prevent the form submission
-          e.preventDefault();
-        }
-
-        // Return false as additional prevention
-        return false;
-      });
-
-      // Try to focus username field
-      try {
-        document.getElementById('username').focus();
-      } catch(e) {
-        // Ignore focus errors
-      }
-    }
-
-    // Also attach on DOMContentLoaded as backup
-    document.addEventListener('DOMContentLoaded', function() {
-      console.log('[INIT] DOM ready, checking if handler needed');
-      var form = document.getElementById('loginForm');
-      if (form && !form.hasAttribute('data-handler-attached')) {
-        console.log('[INIT] Attaching handler via DOMContentLoaded');
-        form.setAttribute('data-handler-attached', 'true');
-        attachFormHandler(form);
-      }
+    // Focus username field on load
+    window.addEventListener('DOMContentLoaded', function() {
+      console.log('[INIT] DOM ready, focusing username field');
+      document.getElementById('username').focus();
     });
   </script>
 </body>

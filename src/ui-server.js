@@ -29,6 +29,9 @@ const app = express();
 const server = createServer(app);
 const wss = new WebSocketServer({ server });
 
+// Trust proxy headers (critical for Railway and other PaaS platforms)
+app.set('trust proxy', 1);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -42,7 +45,8 @@ app.use(session({
   cookie: {
     secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
     httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    sameSite: 'lax' // Add sameSite for better cookie handling
   }
 }));
 
@@ -52,21 +56,32 @@ const requireAuth = (req, res, next) => {
   const authUsername = process.env.AUTH_USERNAME;
   const authPassword = process.env.AUTH_PASSWORD;
 
+  // Debug logging
+  console.log('[AUTH] Checking auth for:', req.path);
+  console.log('[AUTH] Session ID:', req.sessionID);
+  console.log('[AUTH] Session authenticated:', req.session?.authenticated);
+
   if (!authUsername || !authPassword) {
+    console.log('[AUTH] No credentials configured, allowing access');
     return next();
   }
 
   // Check if user is logged in
   if (req.session && req.session.authenticated) {
+    console.log('[AUTH] User is authenticated, allowing access');
     return next();
   }
 
+  console.log('[AUTH] User not authenticated');
+
   // For API routes, return 401
   if (req.path.startsWith('/api/')) {
+    console.log('[AUTH] API route, returning 401');
     return res.status(401).json({ error: 'Authentication required' });
   }
 
   // For other routes, redirect to login
+  console.log('[AUTH] Redirecting to login');
   res.redirect('/login');
 };
 
@@ -76,17 +91,40 @@ app.post('/api/login', (req, res) => {
   const authUsername = process.env.AUTH_USERNAME;
   const authPassword = process.env.AUTH_PASSWORD;
 
+  // Debug logging for production
+  console.log('[LOGIN] Login attempt received');
+  console.log('[LOGIN] Session ID:', req.sessionID);
+  console.log('[LOGIN] Protocol:', req.protocol);
+  console.log('[LOGIN] Secure:', req.secure);
+
   // If auth is not configured, allow access
   if (!authUsername || !authPassword) {
     req.session.authenticated = true;
-    return res.json({ success: true });
+    req.session.save((err) => {
+      if (err) {
+        console.error('[LOGIN] Session save error:', err);
+        return res.status(500).json({ error: 'Session error' });
+      }
+      console.log('[LOGIN] Session saved (no auth)');
+      res.json({ success: true });
+    });
+    return;
   }
 
   // Check credentials
   if (username === authUsername && password === authPassword) {
     req.session.authenticated = true;
-    res.json({ success: true });
+    req.session.save((err) => {
+      if (err) {
+        console.error('[LOGIN] Session save error:', err);
+        return res.status(500).json({ error: 'Session error' });
+      }
+      console.log('[LOGIN] Session saved successfully');
+      console.log('[LOGIN] Session after save:', req.session);
+      res.json({ success: true });
+    });
   } else {
+    console.log('[LOGIN] Invalid credentials');
     res.status(401).json({ error: 'Invalid credentials' });
   }
 });
